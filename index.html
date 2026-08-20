@@ -163,7 +163,7 @@ function renderGrid() {
         <img src="${p.fotos[0] || ''}" alt="${p.nombre}" onerror="this.style.display='none'">
         <div class="card-body">
           <h3>${p.nombre}</h3>
-          <div class="precio">$${p.precioVenta.toFixed(0)}</div>
+          <div class="precio">£${p.precioVenta.toFixed(0)}</div>
           <div class="stock">${p.enStock ? 'In stock' : 'Out of stock'}</div>
         </div>
       </div>
@@ -181,7 +181,7 @@ function abrirModal(index) {
   document.getElementById('modalNombre').textContent = p.nombre;
   document.getElementById('modalDesc').textContent =
     [p.sabor, p.presentacion, p.descripcion].filter(Boolean).join(' | ');
-  document.getElementById('modalPrecio').textContent = '$' + p.precioVenta.toFixed(0);
+  document.getElementById('modalPrecio').textContent = '£' + p.precioVenta.toFixed(0);
   const mensaje = encodeURIComponent(`Hi, I'm interested in this product: ${p.nombre}`);
   document.getElementById('modalWhatsapp').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
   document.getElementById('modal').classList.add('abierto');
