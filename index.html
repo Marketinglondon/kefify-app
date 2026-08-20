@@ -20,6 +20,8 @@
   header .titulos { text-align: left; }
   header h1 { font-size: 22px; letter-spacing: 1px; color: #000; }
   header p { font-size: 12px; color: #333; margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .btn-lang { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 12px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; font-weight: bold; }
   .btn-share-page { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 14px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; }
 
   .hero { width: 100%; overflow: hidden; }
@@ -106,10 +108,13 @@
       <img src="assets/icon/Logo.png" alt="Kefify">
       <div class="titulos">
         <h1>KEFIFY</h1>
-        <p>KEFIR | BULGARIAN CULTURES | HEALTHY</p>
+        <p id="txt-subtitle">KEFIR | BULGARIAN CULTURES | HEALTHY</p>
       </div>
     </div>
-    <button class="btn-share-page" onclick="compartirPagina()">Share</button>
+    <div class="header-right">
+      <button class="btn-lang" id="btnLang" onclick="toggleLang()">ES</button>
+      <button class="btn-share-page" id="txt-share" onclick="compartirPagina()">Share</button>
+    </div>
   </div>
 </header>
 
@@ -120,94 +125,94 @@
 <nav class="top-tabs">
   <button class="tab-btn activo" data-panel="benefits" onclick="mostrarPanel('benefits')">
     <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-9C.5 8.5 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4.5 4.5 8-2.5 4.65-9.5 9-9.5 9z"/></svg>
-    <span>Benefits</span>
+    <span id="tab-benefits">Benefits</span>
   </button>
   <button class="tab-btn" data-panel="products" onclick="mostrarPanel('products')">
     <svg viewBox="0 0 24 24"><path d="M6 2l1.5 5h9L18 2"/><path d="M3.5 7h17l-1.5 13h-14z"/></svg>
-    <span>Products</span>
+    <span id="tab-products">Products</span>
   </button>
   <button class="tab-btn" data-panel="about" onclick="mostrarPanel('about')">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12" y2="8"/></svg>
-    <span>About</span>
+    <span id="tab-about">About</span>
   </button>
   <button class="tab-btn" data-panel="recipes" onclick="mostrarPanel('recipes')">
     <svg viewBox="0 0 24 24"><path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="14" y2="12"/></svg>
-    <span>Recipes</span>
+    <span id="tab-recipes">Recipes</span>
   </button>
   <button class="tab-btn" data-panel="contact" onclick="mostrarPanel('contact')">
     <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-    <span>Contact</span>
+    <span id="tab-contact">Contact</span>
   </button>
 </nav>
 
 <div id="benefits" class="panel activo">
-  <h2>Benefits</h2>
-  <p class="subtitle">Why kefir is good for you</p>
+  <h2 id="txt-benefitsTitle">Benefits</h2>
+  <p class="subtitle" id="txt-benefitsSub">Why kefir is good for you</p>
   <div class="benefits-grid">
     <div class="benefit-card">
       <div class="icon">🦠</div>
-      <h3>Probiotics</h3>
-      <p>Rich in live cultures that support a healthy gut microbiome.</p>
+      <h3 id="txt-b1t">Probiotics</h3>
+      <p id="txt-b1d">Rich in live cultures that support a healthy gut microbiome.</p>
     </div>
     <div class="benefit-card">
       <div class="icon">🌿</div>
-      <h3>Digestion</h3>
-      <p>Helps improve digestion and nutrient absorption naturally.</p>
+      <h3 id="txt-b2t">Digestion</h3>
+      <p id="txt-b2d">Helps improve digestion and nutrient absorption naturally.</p>
     </div>
     <div class="benefit-card">
       <div class="icon">🛡️</div>
-      <h3>Immune support</h3>
-      <p>Supports a stronger immune system with regular consumption.</p>
+      <h3 id="txt-b3t">Immune support</h3>
+      <p id="txt-b3d">Supports a stronger immune system with regular consumption.</p>
     </div>
     <div class="benefit-card">
       <div class="icon">🦴</div>
-      <h3>Bone health</h3>
-      <p>A good source of calcium and protein for stronger bones.</p>
+      <h3 id="txt-b4t">Bone health</h3>
+      <p id="txt-b4d">A good source of calcium and protein for stronger bones.</p>
     </div>
   </div>
 </div>
 
 <div id="products" class="panel">
-  <h2>Products</h2>
-  <p class="subtitle">Explore our full range</p>
+  <h2 id="txt-productsTitle">Products</h2>
+  <p class="subtitle" id="txt-productsSub">Explore our full range</p>
   <div class="filtros" id="filtros"></div>
   <div class="grid" id="grid"></div>
 </div>
 
 <div id="about" class="panel">
-  <h2>About Us</h2>
-  <p class="subtitle">Our story</p>
+  <h2 id="txt-aboutTitle">About Us</h2>
+  <p class="subtitle" id="txt-aboutSub">Our story</p>
   <div class="about-box">
-    <p>Kefify was born from a passion for traditional fermentation and natural nutrition. We craft our kefir-based products using authentic Bulgarian cultures, combining time-honoured methods with careful attention to quality.</p>
-    <p>Every bottle, tub and wheel of cheese is made with care, so you can enjoy the real benefits of kefir in a delicious way.</p>
+    <p id="txt-aboutP1">Kefify was born from a passion for traditional fermentation and natural nutrition. We craft our kefir-based products using authentic Bulgarian cultures, combining time-honoured methods with careful attention to quality.</p>
+    <p id="txt-aboutP2">Every bottle, tub and wheel of cheese is made with care, so you can enjoy the real benefits of kefir in a delicious way.</p>
   </div>
 </div>
 
 <div id="recipes" class="panel">
-  <h2>Recipes</h2>
-  <p class="subtitle">Simple ideas with Kefify products</p>
+  <h2 id="txt-recipesTitle">Recipes</h2>
+  <p class="subtitle" id="txt-recipesSub">Simple ideas with Kefify products</p>
   <div class="recipes-grid">
     <div class="recipe-card">
-      <h3>Kefir Smoothie</h3>
-      <p>Blend Kefify kefir drink with your favourite fruits and a spoon of honey for a refreshing breakfast.</p>
+      <h3 id="txt-r1t">Kefir Smoothie</h3>
+      <p id="txt-r1d">Blend Kefify kefir drink with your favourite fruits and a spoon of honey for a refreshing breakfast.</p>
     </div>
     <div class="recipe-card">
-      <h3>Herb Butter Toast</h3>
-      <p>Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.</p>
+      <h3 id="txt-r2t">Herb Butter Toast</h3>
+      <p id="txt-r2d">Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.</p>
     </div>
     <div class="recipe-card">
-      <h3>Yogurt Bowl</h3>
-      <p>Layer Kefify yogurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.</p>
+      <h3 id="txt-r3t">Yogurt Bowl</h3>
+      <p id="txt-r3d">Layer Kefify yogurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.</p>
     </div>
   </div>
 </div>
 
 <div id="contact" class="panel">
-  <h2>Contact</h2>
-  <p class="subtitle">We'd love to hear from you</p>
+  <h2 id="txt-contactTitle">Contact</h2>
+  <p class="subtitle" id="txt-contactSub">We'd love to hear from you</p>
   <div class="contact-box">
-    <p>Have a question or want to place an order? Message us directly on WhatsApp and we'll get back to you shortly.</p>
-    <a href="https://wa.me/447446830987" class="btn-contact-whatsapp" target="_blank">Message us on WhatsApp</a>
+    <p id="txt-contactP">Have a question or want to place an order? Message us directly on WhatsApp and we'll get back to you shortly.</p>
+    <a href="https://wa.me/447446830987" class="btn-contact-whatsapp" target="_blank" id="txt-contactBtn">Message us on WhatsApp</a>
   </div>
 </div>
 
@@ -218,9 +223,9 @@
       <h2 id="modalNombre"></h2>
       <p id="modalDesc" style="color:#666; font-size:14px; margin-top:6px;"></p>
       <p class="precio" id="modalPrecio" style="font-size:20px; margin-top:10px; color:#556B2F; font-weight:bold;"></p>
-      <a href="#" id="modalWhatsapp" class="btn-whatsapp" target="_blank">Ask on WhatsApp</a>
-      <button class="btn-share-product" onclick="compartirProducto()">Share this product</button>
-      <div class="btn-cerrar" onclick="cerrarModal()">Close</div>
+      <a href="#" id="modalWhatsapp" class="btn-whatsapp" target="_blank"><span id="txt-askWa">Ask on WhatsApp</span></a>
+      <button class="btn-share-product" onclick="compartirProducto()" id="txt-shareProd">Share this product</button>
+      <div class="btn-cerrar" onclick="cerrarModal()" id="txt-close">Close</div>
     </div>
   </div>
 </div>
@@ -236,6 +241,68 @@ const CATEGORIAS_FIJAS = ['Drinks', 'Yogurt', 'Desserts', 'Ice Cream', 'Artisana
 let productos = [];
 let categoriaActiva = 'Drinks';
 let productoActual = null;
+let currentLang = localStorage.getItem('kefify_lang') || 'en';
+
+const T = {
+  en: {
+    subtitle: 'KEFIR | BULGARIAN CULTURES | HEALTHY',
+    share: 'Share',
+    splashBtn: 'Discover your balance',
+    tabBenefits: 'Benefits', tabProducts: 'Products', tabAbout: 'About', tabRecipes: 'Recipes', tabContact: 'Contact',
+    benefitsTitle: 'Benefits', benefitsSub: 'Why kefir is good for you',
+    b1t: 'Probiotics', b1d: 'Rich in live cultures that support a healthy gut microbiome.',
+    b2t: 'Digestion', b2d: 'Helps improve digestion and nutrient absorption naturally.',
+    b3t: 'Immune support', b3d: 'Supports a stronger immune system with regular consumption.',
+    b4t: 'Bone health', b4d: 'A good source of calcium and protein for stronger bones.',
+    productsTitle: 'Products', productsSub: 'Explore our full range',
+    categories: { Drinks: 'Drinks', Yogurt: 'Yogurt', Desserts: 'Desserts', 'Ice Cream': 'Ice Cream', 'Artisanal Dairy': 'Artisanal Dairy' },
+    inStock: 'In stock', outStock: 'Out of stock',
+    noProducts: 'No products in this category yet.', loadError: 'Could not load the catalog. Please try again.',
+    aboutTitle: 'About Us', aboutSub: 'Our story',
+    aboutP1: 'Kefify was born from a passion for traditional fermentation and natural nutrition. We craft our kefir-based products using authentic Bulgarian cultures, combining time-honoured methods with careful attention to quality.',
+    aboutP2: 'Every bottle, tub and wheel of cheese is made with care, so you can enjoy the real benefits of kefir in a delicious way.',
+    recipesTitle: 'Recipes', recipesSub: 'Simple ideas with Kefify products',
+    r1t: 'Kefir Smoothie', r1d: 'Blend Kefify kefir drink with your favourite fruits and a spoon of honey for a refreshing breakfast.',
+    r2t: 'Herb Butter Toast', r2d: 'Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.',
+    r3t: 'Yogurt Bowl', r3d: 'Layer Kefify yogurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.',
+    contactTitle: 'Contact', contactSub: "We'd love to hear from you",
+    contactP: "Have a question or want to place an order? Message us directly on WhatsApp and we'll get back to you shortly.",
+    contactBtn: 'Message us on WhatsApp',
+    askWa: 'Ask on WhatsApp', shareProd: 'Share this product', close: 'Close',
+    shareTitle: 'Kefify', shareText: 'Check out the Kefify catalog',
+    copied: 'Link copied to clipboard!', productCopied: 'Product info copied to clipboard!',
+    askMsg: (name) => `Hi, I'm interested in this product: ${name}`
+  },
+  es: {
+    subtitle: 'KEFIR | CULTIVOS BÚLGAROS | SALUDABLE',
+    share: 'Compartir',
+    splashBtn: 'Descubre tu equilibrio',
+    tabBenefits: 'Beneficios', tabProducts: 'Productos', tabAbout: 'Nosotros', tabRecipes: 'Recetas', tabContact: 'Contacto',
+    benefitsTitle: 'Beneficios', benefitsSub: 'Por qué el kéfir es bueno para ti',
+    b1t: 'Probióticos', b1d: 'Rico en cultivos vivos que apoyan un microbioma intestinal saludable.',
+    b2t: 'Digestión', b2d: 'Ayuda a mejorar la digestión y la absorción de nutrientes de forma natural.',
+    b3t: 'Sistema inmune', b3d: 'Fortalece el sistema inmunológico con un consumo regular.',
+    b4t: 'Salud ósea', b4d: 'Buena fuente de calcio y proteína para huesos más fuertes.',
+    productsTitle: 'Productos', productsSub: 'Explora toda nuestra línea',
+    categories: { Drinks: 'Bebidas', Yogurt: 'Yogur', Desserts: 'Postres', 'Ice Cream': 'Helado', 'Artisanal Dairy': 'Lácteos Artesanales' },
+    inStock: 'Disponible', outStock: 'Agotado',
+    noProducts: 'Aún no hay productos en esta categoría.', loadError: 'No se pudo cargar el catálogo. Intenta de nuevo.',
+    aboutTitle: 'Nosotros', aboutSub: 'Nuestra historia',
+    aboutP1: 'Kefify nació de la pasión por la fermentación tradicional y la nutrición natural. Elaboramos nuestros productos a base de kéfir con cultivos búlgaros auténticos, combinando métodos tradicionales con un cuidado especial en la calidad.',
+    aboutP2: 'Cada botella, tarrina y rueda de queso está hecha con dedicación, para que disfrutes los verdaderos beneficios del kéfir de forma deliciosa.',
+    recipesTitle: 'Recetas', recipesSub: 'Ideas sencillas con productos Kefify',
+    r1t: 'Batido de kéfir', r1d: 'Licúa la bebida de kéfir Kefify con tus frutas favoritas y una cucharada de miel para un desayuno refrescante.',
+    r2t: 'Tostada con mantequilla de hierbas', r2d: 'Unta la mantequilla artesanal Kefify en pan tostado, agrega hierbas frescas y una pizca de sal marina.',
+    r3t: 'Bowl de yogur', r3d: 'Combina el yogur Kefify con granola, fruta de temporada y un toque de miel para una merienda saludable.',
+    contactTitle: 'Contacto', contactSub: 'Nos encantaría saber de ti',
+    contactP: '¿Tienes una pregunta o quieres hacer un pedido? Escríbenos directamente por WhatsApp y te responderemos pronto.',
+    contactBtn: 'Escríbenos por WhatsApp',
+    askWa: 'Preguntar por WhatsApp', shareProd: 'Compartir producto', close: 'Cerrar',
+    shareTitle: 'Kefify', shareText: 'Mira el catálogo de Kefify',
+    copied: '¡Enlace copiado!', productCopied: '¡Información del producto copiada!',
+    askMsg: (name) => `Hola, me interesa este producto: ${name}`
+  }
+};
 
 function entrarCatalogo() {
   const splash = document.getElementById('splash');
@@ -248,6 +315,51 @@ function mostrarPanel(id) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
   document.getElementById(id).classList.add('activo');
   document.querySelector(`.tab-btn[data-panel="${id}"]`).classList.add('activo');
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'es' : 'en';
+  localStorage.setItem('kefify_lang', currentLang);
+  applyTranslations();
+  renderFiltros();
+  renderGrid();
+}
+
+function applyTranslations() {
+  const t = T[currentLang];
+  document.getElementById('btnLang').textContent = currentLang === 'en' ? 'ES' : 'EN';
+  document.getElementById('txt-subtitle').textContent = t.subtitle;
+  document.getElementById('txt-share').textContent = t.share;
+  document.getElementById('btnEntrar').textContent = t.splashBtn;
+  document.getElementById('tab-benefits').textContent = t.tabBenefits;
+  document.getElementById('tab-products').textContent = t.tabProducts;
+  document.getElementById('tab-about').textContent = t.tabAbout;
+  document.getElementById('tab-recipes').textContent = t.tabRecipes;
+  document.getElementById('tab-contact').textContent = t.tabContact;
+  document.getElementById('txt-benefitsTitle').textContent = t.benefitsTitle;
+  document.getElementById('txt-benefitsSub').textContent = t.benefitsSub;
+  document.getElementById('txt-b1t').textContent = t.b1t; document.getElementById('txt-b1d').textContent = t.b1d;
+  document.getElementById('txt-b2t').textContent = t.b2t; document.getElementById('txt-b2d').textContent = t.b2d;
+  document.getElementById('txt-b3t').textContent = t.b3t; document.getElementById('txt-b3d').textContent = t.b3d;
+  document.getElementById('txt-b4t').textContent = t.b4t; document.getElementById('txt-b4d').textContent = t.b4d;
+  document.getElementById('txt-productsTitle').textContent = t.productsTitle;
+  document.getElementById('txt-productsSub').textContent = t.productsSub;
+  document.getElementById('txt-aboutTitle').textContent = t.aboutTitle;
+  document.getElementById('txt-aboutSub').textContent = t.aboutSub;
+  document.getElementById('txt-aboutP1').textContent = t.aboutP1;
+  document.getElementById('txt-aboutP2').textContent = t.aboutP2;
+  document.getElementById('txt-recipesTitle').textContent = t.recipesTitle;
+  document.getElementById('txt-recipesSub').textContent = t.recipesSub;
+  document.getElementById('txt-r1t').textContent = t.r1t; document.getElementById('txt-r1d').textContent = t.r1d;
+  document.getElementById('txt-r2t').textContent = t.r2t; document.getElementById('txt-r2d').textContent = t.r2d;
+  document.getElementById('txt-r3t').textContent = t.r3t; document.getElementById('txt-r3d').textContent = t.r3d;
+  document.getElementById('txt-contactTitle').textContent = t.contactTitle;
+  document.getElementById('txt-contactSub').textContent = t.contactSub;
+  document.getElementById('txt-contactP').textContent = t.contactP;
+  document.getElementById('txt-contactBtn').textContent = t.contactBtn;
+  document.getElementById('txt-askWa').textContent = t.askWa;
+  document.getElementById('txt-shareProd').textContent = t.shareProd;
+  document.getElementById('txt-close').textContent = t.close;
 }
 
 function parseFirestoreDoc(doc) {
@@ -277,14 +389,15 @@ async function cargarProductos() {
     renderFiltros();
     renderGrid();
   } catch (e) {
-    document.getElementById('grid').innerHTML = '<p class="vacio">Could not load the catalog. Please try again.</p>';
+    document.getElementById('grid').innerHTML = `<p class="vacio">${T[currentLang].loadError}</p>`;
   }
 }
 
 function renderFiltros() {
+  const t = T[currentLang];
   const cont = document.getElementById('filtros');
   cont.innerHTML = CATEGORIAS_FIJAS.map(c =>
-    `<button class="filtro-btn ${c === categoriaActiva ? 'activo' : ''}" onclick="filtrar('${c}')">${c}</button>`
+    `<button class="filtro-btn ${c === categoriaActiva ? 'activo' : ''}" onclick="filtrar('${c}')">${t.categories[c] || c}</button>`
   ).join('');
 }
 
@@ -296,11 +409,12 @@ function filtrar(cat) {
 }
 
 function renderGrid() {
+  const t = T[currentLang];
   const grid = document.getElementById('grid');
   const lista = productos.filter(p => p.categoria === categoriaActiva);
 
   if (lista.length === 0) {
-    grid.innerHTML = '<p class="vacio">No products in this category yet.</p>';
+    grid.innerHTML = `<p class="vacio">${t.noProducts}</p>`;
   } else {
     grid.innerHTML = lista.map((p, i) => `
       <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
@@ -308,7 +422,7 @@ function renderGrid() {
         <div class="card-body">
           <h3>${p.nombre}</h3>
           <div class="precio">£${p.precioVenta.toFixed(0)}</div>
-          <div class="stock">${p.enStock ? 'In stock' : 'Out of stock'}</div>
+          <div class="stock">${p.enStock ? t.inStock : t.outStock}</div>
         </div>
       </div>
     `).join('');
@@ -320,6 +434,7 @@ function renderGrid() {
 }
 
 function abrirModal(index) {
+  const t = T[currentLang];
   const p = productos[index];
   productoActual = p;
   document.getElementById('modalImg').src = p.fotos[0] || '';
@@ -327,7 +442,7 @@ function abrirModal(index) {
   document.getElementById('modalDesc').textContent =
     [p.sabor, p.presentacion, p.descripcion].filter(Boolean).join(' | ');
   document.getElementById('modalPrecio').textContent = '£' + p.precioVenta.toFixed(0);
-  const mensaje = encodeURIComponent(`Hi, I'm interested in this product: ${p.nombre}`);
+  const mensaje = encodeURIComponent(t.askMsg(p.nombre));
   document.getElementById('modalWhatsapp').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
   document.getElementById('modal').classList.add('abierto');
 }
@@ -337,23 +452,26 @@ function cerrarModal() {
 }
 
 async function compartirPagina() {
-  const shareData = { title: 'Kefify', text: 'Check out the Kefify catalog', url: SITE_URL };
+  const t = T[currentLang];
+  const shareData = { title: t.shareTitle, text: t.shareText, url: SITE_URL };
   try {
     if (navigator.share) { await navigator.share(shareData); }
-    else { await navigator.clipboard.writeText(SITE_URL); alert('Link copied to clipboard!'); }
+    else { await navigator.clipboard.writeText(SITE_URL); alert(t.copied); }
   } catch (e) {}
 }
 
 async function compartirProducto() {
   if (!productoActual) return;
+  const t = T[currentLang];
   const p = productoActual;
   const shareData = { title: p.nombre, text: `${p.nombre} - £${p.precioVenta.toFixed(0)}`, url: SITE_URL };
   try {
     if (navigator.share) { await navigator.share(shareData); }
-    else { await navigator.clipboard.writeText(`${p.nombre} - £${p.precioVenta.toFixed(0)} - ${SITE_URL}`); alert('Product info copied to clipboard!'); }
+    else { await navigator.clipboard.writeText(`${p.nombre} - £${p.precioVenta.toFixed(0)} - ${SITE_URL}`); alert(t.productCopied); }
   } catch (e) {}
 }
 
+applyTranslations();
 cargarProductos();
 </script>
 </body>
