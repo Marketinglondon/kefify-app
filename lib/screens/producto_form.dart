@@ -221,7 +221,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                         child: TextField(
                           controller: _costoCtrl,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Costo proveedor', border: OutlineInputBorder()),
+                          decoration: const InputDecoration(labelText: 'Costo proveedor (£)', border: OutlineInputBorder()),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -229,7 +229,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                         child: TextField(
                           controller: _precioCtrl,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Precio de venta', border: OutlineInputBorder()),
+                          decoration: const InputDecoration(labelText: 'Precio de venta (£)', border: OutlineInputBorder()),
                         ),
                       ),
                     ],
