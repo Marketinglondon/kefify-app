@@ -112,7 +112,7 @@
       </div>
     </div>
     <div class="header-right">
-      <button class="btn-lang" id="btnLang" onclick="toggleLang()">ES</button>
+      <button class="btn-lang" id="btnLang" onclick="toggleLang()">🇪🇸 ES</button>
       <button class="btn-share-page" id="txt-share" onclick="compartirPagina()">Share</button>
     </div>
   </div>
@@ -327,7 +327,7 @@ function toggleLang() {
 
 function applyTranslations() {
   const t = T[currentLang];
-  document.getElementById('btnLang').textContent = currentLang === 'en' ? 'ES' : 'EN';
+  document.getElementById('btnLang').textContent = currentLang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
   document.getElementById('txt-subtitle').textContent = t.subtitle;
   document.getElementById('txt-share').textContent = t.share;
   document.getElementById('btnEntrar').textContent = t.splashBtn;
