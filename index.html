@@ -375,6 +375,7 @@ function parseFirestoreDoc(doc) {
     sabor: getStr('sabor'),
     presentacion: getStr('presentacion'),
     precioVenta: parseFloat(getNum('precioVenta')),
+    precioVentaCOP: parseFloat(getNum('precioVentaCOP')),
     enStock: getBool('enStock'),
     fotos: getArr('fotos'),
     descripcion: getStr('descripcion'),
@@ -416,16 +417,20 @@ function renderGrid() {
   if (lista.length === 0) {
     grid.innerHTML = `<p class="vacio">${t.noProducts}</p>`;
   } else {
-    grid.innerHTML = lista.map((p, i) => `
+    grid.innerHTML = lista.map((p, i) => {
+      const precioTxt = currentLang === 'es'
+        ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
+        : '£' + p.precioVenta.toFixed(0);
+      return `
       <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
         <img src="${p.fotos[0] || ''}" alt="${p.nombre}" onerror="this.style.display='none'">
         <div class="card-body">
           <h3>${p.nombre}</h3>
-          <div class="precio">£${p.precioVenta.toFixed(0)}</div>
+          <div class="precio">${precioTxt}</div>
           <div class="stock">${p.enStock ? t.inStock : t.outStock}</div>
         </div>
       </div>
-    `).join('');
+    `}).join('');
   }
 
   grid.classList.remove('transicionando');
@@ -441,7 +446,10 @@ function abrirModal(index) {
   document.getElementById('modalNombre').textContent = p.nombre;
   document.getElementById('modalDesc').textContent =
     [p.sabor, p.presentacion, p.descripcion].filter(Boolean).join(' | ');
-  document.getElementById('modalPrecio').textContent = '£' + p.precioVenta.toFixed(0);
+  const precioTxt = currentLang === 'es'
+    ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
+    : '£' + p.precioVenta.toFixed(0);
+  document.getElementById('modalPrecio').textContent = precioTxt;
   const mensaje = encodeURIComponent(t.askMsg(p.nombre));
   document.getElementById('modalWhatsapp').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
   document.getElementById('modal').classList.add('abierto');
@@ -464,10 +472,13 @@ async function compartirProducto() {
   if (!productoActual) return;
   const t = T[currentLang];
   const p = productoActual;
-  const shareData = { title: p.nombre, text: `${p.nombre} - £${p.precioVenta.toFixed(0)}`, url: SITE_URL };
+  const precioTxt = currentLang === 'es'
+    ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
+    : '£' + p.precioVenta.toFixed(0);
+  const shareData = { title: p.nombre, text: `${p.nombre} - ${precioTxt}`, url: SITE_URL };
   try {
     if (navigator.share) { await navigator.share(shareData); }
-    else { await navigator.clipboard.writeText(`${p.nombre} - £${p.precioVenta.toFixed(0)} - ${SITE_URL}`); alert(t.productCopied); }
+    else { await navigator.clipboard.writeText(`${p.nombre} - ${precioTxt} - ${SITE_URL}`); alert(t.productCopied); }
   } catch (e) {}
 }
 
