@@ -100,7 +100,7 @@
 
 <div id="splash">
   <img src="assets/icon/Icon.png" alt="Kefify">
-  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance</button>
+  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance / Descubre tu equilibrio</button>
 </div>
 
 <header>
@@ -246,11 +246,24 @@ let categoriaActiva = 'Drinks';
 let productoActual = null;
 let currentLang = localStorage.getItem('kefify_lang') || 'en';
 
+async function detectarPais() {
+  if (localStorage.getItem('kefify_lang')) return;
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    if (data.country_code === 'CO') {
+      currentLang = 'es';
+      applyTranslations();
+      renderFiltros();
+      renderGrid();
+    }
+  } catch (e) {}
+}
+
 const T = {
   en: {
     subtitle: 'KEFIR | BULGARIAN CULTURES | HEALTHY',
     share: 'Share',
-    splashBtn: 'Discover your balance',
     location: '🇬🇧 London - England',
     tabBenefits: 'Benefits', tabProducts: 'Products', tabAbout: 'About', tabRecipes: 'Recipes', tabContact: 'Contact',
     benefitsTitle: 'Benefits', benefitsSub: 'Why kefir is good for you',
@@ -280,7 +293,6 @@ const T = {
   es: {
     subtitle: 'KEFIR | CULTIVOS BÚLGAROS | SALUDABLE',
     share: 'Compartir',
-    splashBtn: 'Descubre tu equilibrio',
     location: '🇨🇴 Palmira - Colombia',
     tabBenefits: 'Beneficios', tabProducts: 'Productos', tabAbout: 'Nosotros', tabRecipes: 'Recetas', tabContact: 'Contacto',
     benefitsTitle: 'Beneficios', benefitsSub: 'Por qué el kéfir es bueno para ti',
@@ -337,7 +349,6 @@ function applyTranslations() {
   document.getElementById('txt-subtitle').textContent = t.subtitle;
   document.getElementById('locationBanner').textContent = t.location;
   document.getElementById('txt-share').textContent = t.share;
-  document.getElementById('btnEntrar').textContent = t.splashBtn;
   document.getElementById('tab-benefits').textContent = t.tabBenefits;
   document.getElementById('tab-products').textContent = t.tabProducts;
   document.getElementById('tab-about').textContent = t.tabAbout;
@@ -493,6 +504,7 @@ async function compartirProducto() {
 
 applyTranslations();
 cargarProductos();
+detectarPais();
 </script>
 </body>
 </html>
