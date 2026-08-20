@@ -19,7 +19,16 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kefify - Mis productos'),
+        title: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.asset('assets/icon/icon.png', width: 32, height: 32),
+            ),
+            const SizedBox(width: 10),
+            const Text('Kefify - Mis productos'),
+          ],
+        ),
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
       ),
