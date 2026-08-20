@@ -16,6 +16,8 @@ class ProductoFormScreen extends StatefulWidget {
 }
 
 class _ProductoFormScreenState extends State<ProductoFormScreen> {
+  static const Color oliveGreen = Color(0xFF556B2F);
+
   final _nombreCtrl = TextEditingController();
   final _codigoCtrl = TextEditingController();
   final _costoCtrl = TextEditingController();
@@ -132,7 +134,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.producto == null ? 'Nuevo producto' : 'Editar producto'),
-        backgroundColor: Colors.teal,
+        backgroundColor: oliveGreen,
         foregroundColor: Colors.white,
         actions: [
           if (widget.producto != null)
@@ -234,6 +236,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   ),
                   const SizedBox(height: 12),
                   SwitchListTile(
+                    activeColor: oliveGreen,
                     title: const Text('En stock'),
                     value: _enStock,
                     onChanged: (v) => setState(() => _enStock = v),
@@ -257,7 +260,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                     child: ElevatedButton(
                       onPressed: _guardar,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal,
+                        backgroundColor: oliveGreen,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       child: const Text('Guardar producto', style: TextStyle(color: Colors.white, fontSize: 16)),
