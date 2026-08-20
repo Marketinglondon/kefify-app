@@ -25,28 +25,56 @@
   .hero { width: 100%; overflow: hidden; }
   .hero img { width: 100%; height: auto; display: block; max-height: 420px; object-fit: cover; object-position: center; }
 
-  #splash { position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.8s; padding: 24px; text-align: center; }
-  #splash img { width: 200px; margin-bottom: 30px; animation: pulse 3.2s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } }
-  #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 15px; font-weight: bold; letter-spacing: 0.5px; cursor: pointer; }
+  /* Pestanas arriba */
+  .top-tabs { display: flex; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 20; }
+  .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: #888; font-size: 10px; border-bottom: 3px solid transparent; }
+  .tab-btn svg { width: 20px; height: 20px; stroke: #888; fill: none; stroke-width: 2; }
+  .tab-btn.activo { color: #556B2F; border-bottom-color: #556B2F; background: #f0f4e8; }
+  .tab-btn.activo svg { stroke: #556B2F; }
 
-  .filtros { display: flex; gap: 8px; padding: 12px; overflow-x: auto; background: white; position: sticky; top: 0; z-index: 10; max-width: 1100px; margin: 0 auto; }
+  .panel { display: none; max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px 16px; }
+  .panel.activo { display: block; }
+  .panel h2 { font-size: 22px; margin-bottom: 6px; }
+  .panel .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
+
+  /* Benefits */
+  .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .benefit-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
+  .benefit-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .benefit-card h3 { font-size: 14px; margin-bottom: 6px; color: #556B2F; }
+  .benefit-card p { font-size: 12px; color: #666; line-height: 1.4; }
+
+  /* Products */
+  .filtros { display: flex; gap: 8px; padding: 0 0 16px 0; overflow-x: auto; }
   .filtro-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #556B2F; background: white; color: #556B2F; white-space: nowrap; font-size: 13px; cursor: pointer; }
   .filtro-btn.activo { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border-color: #556B2F; }
-
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 12px; max-width: 1100px; margin: 0 auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
   .grid.transicionando { animation: fadeSlide 0.35s ease; }
-  @keyframes fadeSlide {
-    0% { opacity: 0; transform: translateX(20px); }
-    100% { opacity: 1; transform: translateX(0); }
-  }
-  .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); position: relative; cursor: pointer; }
+  @keyframes fadeSlide { 0% { opacity: 0; transform: translateX(20px); } 100% { opacity: 1; transform: translateX(0); } }
+  .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); cursor: pointer; }
   .card img { width: 100%; height: 140px; object-fit: cover; }
   .card-body { padding: 10px; }
-  .card-body h3 { font-size: 14px; margin-bottom: 4px; }
+  .card-body h3 { font-size: 14px; margin-bottom: 4px; color: #1a1a1a; }
   .card-body .precio { color: #556B2F; font-weight: bold; font-size: 16px; }
   .card-body .stock { font-size: 11px; color: #888; margin-top: 4px; }
+  .vacio { text-align: center; padding: 40px; color: #888; grid-column: 1 / -1; }
 
+  /* About */
+  .about-box { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .about-box p { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 12px; }
+
+  /* Recipes */
+  .recipes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .recipe-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .recipe-card h3 { font-size: 15px; color: #556B2F; margin-bottom: 8px; }
+  .recipe-card p { font-size: 13px; color: #666; line-height: 1.5; }
+
+  /* Contact */
+  .contact-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
+  .contact-box p { font-size: 14px; color: #444; margin-bottom: 18px; }
+  .btn-contact-whatsapp { display: inline-block; background: #25D366; color: white; padding: 12px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 14px; }
+
+  /* Modal producto */
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal.abierto { display: flex; }
   .modal-content { background: white; border-radius: 12px; max-width: 400px; width: 100%; max-height: 90vh; overflow-y: auto; }
@@ -56,13 +84,16 @@
   .btn-whatsapp { display: block; background: #25D366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 12px; font-weight: bold; }
   .btn-share-product { display: block; background: white; color: #556B2F; text-align: center; padding: 12px; border-radius: 8px; border: 1px solid #556B2F; margin-top: 10px; font-weight: bold; cursor: pointer; width: 100%; }
   .btn-cerrar { display: block; text-align: center; padding: 10px; color: #888; cursor: pointer; }
-  .vacio { text-align: center; padding: 40px; color: #888; grid-column: 1 / -1; }
 
-  /* Tablet y PC: se activan automaticamente solo cuando la pantalla es ancha */
+  #splash { position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.8s; padding: 24px; text-align: center; }
+  #splash img { width: 200px; margin-bottom: 30px; animation: pulse 3.2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } }
+  #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 15px; font-weight: bold; letter-spacing: 0.5px; cursor: pointer; }
+
   @media (min-width: 700px) {
-    .grid { grid-template-columns: repeat(4, 1fr); gap: 18px; padding: 24px 12px; }
+    .grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
     header { padding: 20px 24px; }
-    .filtros { padding: 16px 12px; justify-content: center; }
+    .tab-btn span { font-size: 12px; }
   }
   @media (min-width: 1100px) {
     .grid { grid-template-columns: repeat(5, 1fr); }
@@ -93,8 +124,99 @@
   <img src="assets/icon/hero-full.png" alt="Kefify - Nutrition and quality for every moment">
 </div>
 
-<div class="filtros" id="filtros"></div>
-<div class="grid" id="grid"></div>
+<nav class="top-tabs">
+  <button class="tab-btn activo" data-panel="benefits" onclick="mostrarPanel('benefits')">
+    <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-9C.5 8.5 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4.5 4.5 8-2.5 4.65-9.5 9-9.5 9z"/></svg>
+    <span>Benefits</span>
+  </button>
+  <button class="tab-btn" data-panel="products" onclick="mostrarPanel('products')">
+    <svg viewBox="0 0 24 24"><path d="M6 2l1.5 5h9L18 2"/><path d="M3.5 7h17l-1.5 13h-14z"/></svg>
+    <span>Products</span>
+  </button>
+  <button class="tab-btn" data-panel="about" onclick="mostrarPanel('about')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12" y2="8"/></svg>
+    <span>About</span>
+  </button>
+  <button class="tab-btn" data-panel="recipes" onclick="mostrarPanel('recipes')">
+    <svg viewBox="0 0 24 24"><path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="14" y2="12"/></svg>
+    <span>Recipes</span>
+  </button>
+  <button class="tab-btn" data-panel="contact" onclick="mostrarPanel('contact')">
+    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    <span>Contact</span>
+  </button>
+</nav>
+
+<div id="benefits" class="panel activo">
+  <h2>Benefits</h2>
+  <p class="subtitle">Why kefir is good for you</p>
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="icon">🦠</div>
+      <h3>Probiotics</h3>
+      <p>Rich in live cultures that support a healthy gut microbiome.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="icon">🌿</div>
+      <h3>Digestion</h3>
+      <p>Helps improve digestion and nutrient absorption naturally.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="icon">🛡️</div>
+      <h3>Immune support</h3>
+      <p>Supports a stronger immune system with regular consumption.</p>
+    </div>
+    <div class="benefit-card">
+      <div class="icon">🦴</div>
+      <h3>Bone health</h3>
+      <p>A good source of calcium and protein for stronger bones.</p>
+    </div>
+  </div>
+</div>
+
+<div id="products" class="panel">
+  <h2>Products</h2>
+  <p class="subtitle">Explore our full range</p>
+  <div class="filtros" id="filtros"></div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div id="about" class="panel">
+  <h2>About Us</h2>
+  <p class="subtitle">Our story</p>
+  <div class="about-box">
+    <p>Kefify was born from a passion for traditional fermentation and natural nutrition. We craft our kefir-based products using authentic Bulgarian cultures, combining time-honoured methods with careful attention to quality.</p>
+    <p>Every bottle, tub and wheel of cheese is made with care, so you can enjoy the real benefits of kefir in a delicious way.</p>
+  </div>
+</div>
+
+<div id="recipes" class="panel">
+  <h2>Recipes</h2>
+  <p class="subtitle">Simple ideas with Kefify products</p>
+  <div class="recipes-grid">
+    <div class="recipe-card">
+      <h3>Kefir Smoothie</h3>
+      <p>Blend Kefify kefir drink with your favourite fruits and a spoon of honey for a refreshing breakfast.</p>
+    </div>
+    <div class="recipe-card">
+      <h3>Herb Butter Toast</h3>
+      <p>Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.</p>
+    </div>
+    <div class="recipe-card">
+      <h3>Yogurt Bowl</h3>
+      <p>Layer Kefify yogurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.</p>
+    </div>
+  </div>
+</div>
+
+<div id="contact" class="panel">
+  <h2>Contact</h2>
+  <p class="subtitle">We'd love to hear from you</p>
+  <div class="contact-box">
+    <p>Have a question or want to place an order? Message us directly on WhatsApp and we'll get back to you shortly.</p>
+    <a href="https://wa.me/447446830987" class="btn-contact-whatsapp" target="_blank">Message us on WhatsApp</a>
+  </div>
+</div>
 
 <div class="modal" id="modal">
   <div class="modal-content">
@@ -102,7 +224,7 @@
     <div class="modal-body">
       <h2 id="modalNombre"></h2>
       <p id="modalDesc" style="color:#666; font-size:14px; margin-top:6px;"></p>
-      <p class="precio" id="modalPrecio" style="font-size:20px; margin-top:10px;"></p>
+      <p class="precio" id="modalPrecio" style="font-size:20px; margin-top:10px; color:#556B2F; font-weight:bold;"></p>
       <a href="#" id="modalWhatsapp" class="btn-whatsapp" target="_blank">Ask on WhatsApp</a>
       <button class="btn-share-product" onclick="compartirProducto()">Share this product</button>
       <div class="btn-cerrar" onclick="cerrarModal()">Close</div>
@@ -126,6 +248,13 @@ function entrarCatalogo() {
   const splash = document.getElementById('splash');
   splash.style.opacity = '0';
   setTimeout(() => splash.style.display = 'none', 800);
+}
+
+function mostrarPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('activo'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+  document.getElementById(id).classList.add('activo');
+  document.querySelector(`.tab-btn[data-panel="${id}"]`).classList.add('activo');
 }
 
 function parseFirestoreDoc(doc) {
@@ -215,36 +344,20 @@ function cerrarModal() {
 }
 
 async function compartirPagina() {
-  const shareData = {
-    title: 'Kefify',
-    text: 'Check out the Kefify catalog: kefir drinks, ice cream, desserts, cheese and butter',
-    url: SITE_URL
-  };
+  const shareData = { title: 'Kefify', text: 'Check out the Kefify catalog', url: SITE_URL };
   try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      await navigator.clipboard.writeText(SITE_URL);
-      alert('Link copied to clipboard!');
-    }
+    if (navigator.share) { await navigator.share(shareData); }
+    else { await navigator.clipboard.writeText(SITE_URL); alert('Link copied to clipboard!'); }
   } catch (e) {}
 }
 
 async function compartirProducto() {
   if (!productoActual) return;
   const p = productoActual;
-  const shareData = {
-    title: p.nombre,
-    text: `${p.nombre} - £${p.precioVenta.toFixed(0)}`,
-    url: SITE_URL
-  };
+  const shareData = { title: p.nombre, text: `${p.nombre} - £${p.precioVenta.toFixed(0)}`, url: SITE_URL };
   try {
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      await navigator.clipboard.writeText(`${p.nombre} - £${p.precioVenta.toFixed(0)} - ${SITE_URL}`);
-      alert('Product info copied to clipboard!');
-    }
+    if (navigator.share) { await navigator.share(shareData); }
+    else { await navigator.clipboard.writeText(`${p.nombre} - £${p.precioVenta.toFixed(0)} - ${SITE_URL}`); alert('Product info copied to clipboard!'); }
   } catch (e) {}
 }
 
