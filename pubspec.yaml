@@ -1,1 +1,28 @@
+name: kefify
+description: App de catalogo Kefify
+publish_to: 'none'
+version: 1.0.0+1
 
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.5
+  image_picker: ^1.1.2
+  uuid: ^4.4.0
+  pdf: ^3.10.8
+  printing: ^5.12.0
+  http: ^1.2.2
+  firebase_core: ^2.32.0
+  cloud_firestore: ^4.17.5
+  firebase_auth: ^4.20.0
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
