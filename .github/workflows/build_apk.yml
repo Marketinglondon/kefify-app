@@ -48,6 +48,9 @@ jobs:
             sed -i -E 's/compileSdkVersion flutter\.compileSdkVersion/compileSdkVersion 35/' "$f" || true
           done
 
+      - name: Generar ícono de la app
+        run: dart run flutter_launcher_icons
+
       - name: Compilar APK
         run: flutter build apk --release
 
