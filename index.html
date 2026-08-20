@@ -84,7 +84,7 @@
   #splash { position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.8s; padding: 24px; text-align: center; }
   #splash img { width: 200px; margin-bottom: 30px; animation: pulse 3.2s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } }
-  #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 15px; font-weight: bold; letter-spacing: 0.5px; cursor: pointer; }
+  #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 14px; font-weight: bold; letter-spacing: 0.5px; cursor: pointer; line-height: 1.6; }
 
   @media (min-width: 700px) {
     .grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
@@ -100,7 +100,7 @@
 
 <div id="splash">
   <img src="assets/icon/Icon.png" alt="Kefify">
-  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance / Descubre tu equilibrio</button>
+  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance<br>Descubre tu equilibrio</button>
 </div>
 
 <header>
