@@ -22,6 +22,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   final _codigoCtrl = TextEditingController();
   final _costoCtrl = TextEditingController();
   final _precioCtrl = TextEditingController();
+  final _precioCOPCtrl = TextEditingController();
   final _saborCtrl = TextEditingController();
   final _presentacionCtrl = TextEditingController();
   final _descripcionCtrl = TextEditingController();
@@ -43,6 +44,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       _codigoCtrl.text = p.codigo;
       _costoCtrl.text = p.costoProveedor.toString();
       _precioCtrl.text = p.precioVenta.toString();
+      _precioCOPCtrl.text = p.precioVentaCOP.toString();
       _saborCtrl.text = p.sabor;
       _presentacionCtrl.text = p.presentacion;
       _descripcionCtrl.text = p.descripcion;
@@ -90,6 +92,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       presentacion: _presentacionCtrl.text.trim(),
       costoProveedor: double.tryParse(_costoCtrl.text) ?? 0,
       precioVenta: double.tryParse(_precioCtrl.text) ?? 0,
+      precioVentaCOP: double.tryParse(_precioCOPCtrl.text) ?? 0,
       enStock: _enStock,
       fotos: todasLasFotos,
       proveedorNombre: _proveedorNombreCtrl.text.trim(),
@@ -215,24 +218,22 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                     decoration: const InputDecoration(labelText: 'Descripcion', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _costoCtrl,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Costo proveedor (£)', border: OutlineInputBorder()),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: TextField(
-                          controller: _precioCtrl,
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Precio de venta (£)', border: OutlineInputBorder()),
-                        ),
-                      ),
-                    ],
+                  TextField(
+                    controller: _costoCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: 'Costo proveedor (£)', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _precioCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: 'Precio de venta - UK (£)', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _precioCOPCtrl,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: 'Precio de venta - Colombia (\$ COP)', border: OutlineInputBorder()),
                   ),
                   const SizedBox(height: 12),
                   SwitchListTile(
