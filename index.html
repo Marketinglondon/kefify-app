@@ -69,6 +69,7 @@
 
   .contact-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
   .contact-box p { font-size: 14px; color: #444; margin-bottom: 18px; }
+  .contact-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   .btn-contact-whatsapp { display: inline-block; background: #25D366; color: white; padding: 12px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 14px; }
 
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
@@ -213,8 +214,11 @@
   <h2 id="txt-contactTitle">Contact</h2>
   <p class="subtitle" id="txt-contactSub">We'd love to hear from you</p>
   <div class="contact-box">
-    <p id="txt-contactP">Have a question or want to place an order? Message us directly on WhatsApp and we'll get back to you shortly.</p>
-    <a href="https://wa.me/447446830987" class="btn-contact-whatsapp" target="_blank" id="txt-contactBtn">Message us on WhatsApp</a>
+    <p id="txt-contactP">Choose your location to message us on WhatsApp</p>
+    <div class="contact-buttons">
+      <a href="https://wa.me/447446830987" class="btn-contact-whatsapp" target="_blank">🇬🇧 London</a>
+      <a href="https://wa.me/573226082281" class="btn-contact-whatsapp" target="_blank">🇨🇴 Palmira</a>
+    </div>
   </div>
 </div>
 
@@ -269,8 +273,7 @@ const T = {
     r2t: 'Herb Butter Toast', r2d: 'Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.',
     r3t: 'Yogurt Bowl', r3d: 'Layer Kefify yogurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.',
     contactTitle: 'Contact', contactSub: "We'd love to hear from you",
-    contactP: "Have a question or want to place an order? Message us directly on WhatsApp and we'll get back to you shortly.",
-    contactBtn: 'Message us on WhatsApp',
+    contactP: "Choose your location to message us on WhatsApp",
     askWa: 'Ask on WhatsApp', shareProd: 'Share this product', close: 'Close',
     shareTitle: 'Kefify', shareText: 'Check out the Kefify catalog',
     copied: 'Link copied to clipboard!', productCopied: 'Product info copied to clipboard!',
@@ -299,8 +302,7 @@ const T = {
     r2t: 'Tostada con mantequilla de hierbas', r2d: 'Unta la mantequilla artesanal Kefify en pan tostado, agrega hierbas frescas y una pizca de sal marina.',
     r3t: 'Bowl de yogur', r3d: 'Combina el yogur Kefify con granola, fruta de temporada y un toque de miel para una merienda saludable.',
     contactTitle: 'Contacto', contactSub: 'Nos encantaría saber de ti',
-    contactP: '¿Tienes una pregunta o quieres hacer un pedido? Escríbenos directamente por WhatsApp y te responderemos pronto.',
-    contactBtn: 'Escríbenos por WhatsApp',
+    contactP: 'Elige tu ubicación para escribirnos por WhatsApp',
     askWa: 'Preguntar por WhatsApp', shareProd: 'Compartir producto', close: 'Cerrar',
     shareTitle: 'Kefify', shareText: 'Mira el catálogo de Kefify',
     copied: '¡Enlace copiado!', productCopied: '¡Información del producto copiada!',
@@ -361,7 +363,6 @@ function applyTranslations() {
   document.getElementById('txt-contactTitle').textContent = t.contactTitle;
   document.getElementById('txt-contactSub').textContent = t.contactSub;
   document.getElementById('txt-contactP').textContent = t.contactP;
-  document.getElementById('txt-contactBtn').textContent = t.contactBtn;
   document.getElementById('txt-askWa').textContent = t.askWa;
   document.getElementById('txt-shareProd').textContent = t.shareProd;
   document.getElementById('txt-close').textContent = t.close;
