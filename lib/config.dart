@@ -10,11 +10,11 @@ class AppConfig {
 
   // Categorias de producto
   static const List<String> categorias = [
-    'Bebida',
-    'Helado',
-    'Postre',
-    'Queso',
-    'Mantequilla',
+    'Artisanal Dairy',
+    'Ice Cream',
+    'Yogurt',
+    'Desserts',
+    'Drinks',
   ];
 
   // Nombre de la app
