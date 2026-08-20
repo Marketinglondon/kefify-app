@@ -145,3 +145,127 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       body: _guardando
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Fotos', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ..._fotosExistentes.map((url) => ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(url, width: 80, height: 80, fit: BoxFit.cover),
+                          )),
+                      ..._fotosNuevas.map((file) => ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(file, width: 80, height: 80, fit: BoxFit.cover),
+                          )),
+                      InkWell(
+                        onTap: _elegirFotos,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.add_a_photo),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _nombreCtrl,
+                    decoration: const InputDecoration(labelText: 'Nombre del producto', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _codigoCtrl,
+                    decoration: const InputDecoration(labelText: 'Codigo (opcional)', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  DropdownButtonFormField<String>(
+                    value: _categoria,
+                    decoration: const InputDecoration(labelText: 'Categoria', border: OutlineInputBorder()),
+                    items: AppConfig.categorias
+                        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                        .toList(),
+                    onChanged: (v) => setState(() => _categoria = v!),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _saborCtrl,
+                    decoration: const InputDecoration(labelText: 'Sabor', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _presentacionCtrl,
+                    decoration: const InputDecoration(labelText: 'Presentacion (ej. 500ml)', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _descripcionCtrl,
+                    maxLines: 3,
+                    decoration: const InputDecoration(labelText: 'Descripcion', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _costoCtrl,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(labelText: 'Costo proveedor', border: OutlineInputBorder()),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextField(
+                          controller: _precioCtrl,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(labelText: 'Precio de venta', border: OutlineInputBorder()),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SwitchListTile(
+                    title: const Text('En stock'),
+                    value: _enStock,
+                    onChanged: (v) => setState(() => _enStock = v),
+                  ),
+                  const Divider(height: 32),
+                  const Text('Proveedor', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _proveedorNombreCtrl,
+                    decoration: const InputDecoration(labelText: 'Nombre del proveedor', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _proveedorWhatsappCtrl,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(labelText: 'WhatsApp del proveedor', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _guardar,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      child: const Text('Guardar producto', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+}
