@@ -23,7 +23,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: Image.asset('assets/icon/icon.png', width: 32, height: 32),
+              child: Image.asset('assets/icon/Logo.png', width: 32, height: 32),
             ),
             const SizedBox(width: 10),
             const Text('Kefify - Mis productos'),
