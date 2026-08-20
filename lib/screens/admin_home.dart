@@ -15,6 +15,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   String _busqueda = '';
   String _categoriaFiltro = 'Todas';
 
+  static const Color oliveGreen = Color(0xFF556B2F);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             const Text('Kefify - Mis productos'),
           ],
         ),
-        backgroundColor: Colors.teal,
+        backgroundColor: oliveGreen,
         foregroundColor: Colors.white,
       ),
       body: Column(
@@ -125,7 +127,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.teal,
+        backgroundColor: oliveGreen,
         onPressed: () {
           Navigator.push(
             context,
