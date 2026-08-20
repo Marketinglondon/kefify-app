@@ -26,6 +26,7 @@
 
   .hero { width: 100%; overflow: hidden; }
   .hero img { width: 100%; height: auto; display: block; max-height: 420px; object-fit: cover; object-position: center; }
+  .location-banner { text-align: center; background: white; padding: 10px 16px; font-size: 14px; font-weight: bold; color: #556B2F; border-bottom: 1px solid #eee; }
 
   .top-tabs { display: flex; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 20; }
   .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: #888; font-size: 10px; border-bottom: 3px solid transparent; }
@@ -121,6 +122,7 @@
 <div class="hero">
   <img src="assets/icon/hero-full.png" alt="Kefify - Nutrition and quality for every moment">
 </div>
+<div class="location-banner" id="locationBanner">🇬🇧 London - England</div>
 
 <nav class="top-tabs">
   <button class="tab-btn activo" data-panel="benefits" onclick="mostrarPanel('benefits')">
@@ -248,6 +250,7 @@ const T = {
     subtitle: 'KEFIR | BULGARIAN CULTURES | HEALTHY',
     share: 'Share',
     splashBtn: 'Discover your balance',
+    location: '🇬🇧 London - England',
     tabBenefits: 'Benefits', tabProducts: 'Products', tabAbout: 'About', tabRecipes: 'Recipes', tabContact: 'Contact',
     benefitsTitle: 'Benefits', benefitsSub: 'Why kefir is good for you',
     b1t: 'Probiotics', b1d: 'Rich in live cultures that support a healthy gut microbiome.',
@@ -277,6 +280,7 @@ const T = {
     subtitle: 'KEFIR | CULTIVOS BÚLGAROS | SALUDABLE',
     share: 'Compartir',
     splashBtn: 'Descubre tu equilibrio',
+    location: '🇨🇴 Palmira - Colombia',
     tabBenefits: 'Beneficios', tabProducts: 'Productos', tabAbout: 'Nosotros', tabRecipes: 'Recetas', tabContact: 'Contacto',
     benefitsTitle: 'Beneficios', benefitsSub: 'Por qué el kéfir es bueno para ti',
     b1t: 'Probióticos', b1d: 'Rico en cultivos vivos que apoyan un microbioma intestinal saludable.',
@@ -329,6 +333,7 @@ function applyTranslations() {
   const t = T[currentLang];
   document.getElementById('btnLang').textContent = currentLang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
   document.getElementById('txt-subtitle').textContent = t.subtitle;
+  document.getElementById('locationBanner').textContent = t.location;
   document.getElementById('txt-share').textContent = t.share;
   document.getElementById('btnEntrar').textContent = t.splashBtn;
   document.getElementById('tab-benefits').textContent = t.tabBenefits;
