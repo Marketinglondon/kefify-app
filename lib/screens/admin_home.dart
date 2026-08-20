@@ -100,7 +100,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                             : const Icon(Icons.image, size: 40),
                         title: Text(producto.nombre),
                         subtitle: Text(
-                            '${producto.categoria} | \$${producto.precioVenta.toStringAsFixed(0)}\n'
+                            '${producto.categoria} | £${producto.precioVenta.toStringAsFixed(0)}\n'
                             '${producto.enStock ? "En stock" : "Agotado"}'),
                         isThreeLine: true,
                         trailing: IconButton(
