@@ -28,8 +28,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icon/Icon.png
+    - assets/icon/Logo.png
 
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: "assets/icon/Icon.png"
+  image_path: "assets/icon/Logo.png"
