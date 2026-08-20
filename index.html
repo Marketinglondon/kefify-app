@@ -12,36 +12,41 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, sans-serif; background: #f4f9f7; color: #1a1a1a; }
+
   header { background: white; color: black; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #eee; }
+  .header-inner { max-width: 1100px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .header-left { display: flex; align-items: center; gap: 12px; }
   header img { width: 44px; height: 44px; }
   header .titulos { text-align: left; }
   header h1 { font-size: 22px; letter-spacing: 1px; color: #000; }
   header p { font-size: 12px; color: #333; margin-top: 2px; }
-  .btn-share-page { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 14px; border-radius: 20px; font-size: 13px; white-space: nowrap; }
+  .btn-share-page { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 14px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; }
 
-  .hero { width: 100%; }
-  .hero img { width: 100%; height: auto; display: block; }
+  .hero { width: 100%; overflow: hidden; }
+  .hero img { width: 100%; height: auto; display: block; max-height: 420px; object-fit: cover; object-position: center; }
 
   #splash { position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.8s; padding: 24px; text-align: center; }
   #splash img { width: 200px; margin-bottom: 30px; animation: pulse 3.2s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } }
-  #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 15px; font-weight: bold; letter-spacing: 0.5px; }
-  .filtros { display: flex; gap: 8px; padding: 12px; overflow-x: auto; background: white; position: sticky; top: 0; z-index: 10; }
-  .filtro-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #556B2F; background: white; color: #556B2F; white-space: nowrap; font-size: 13px; }
+  #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 15px; font-weight: bold; letter-spacing: 0.5px; cursor: pointer; }
+
+  .filtros { display: flex; gap: 8px; padding: 12px; overflow-x: auto; background: white; position: sticky; top: 0; z-index: 10; max-width: 1100px; margin: 0 auto; }
+  .filtro-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #556B2F; background: white; color: #556B2F; white-space: nowrap; font-size: 13px; cursor: pointer; }
   .filtro-btn.activo { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border-color: #556B2F; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 12px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 12px; max-width: 1100px; margin: 0 auto; }
   .grid.transicionando { animation: fadeSlide 0.35s ease; }
   @keyframes fadeSlide {
     0% { opacity: 0; transform: translateX(20px); }
     100% { opacity: 1; transform: translateX(0); }
   }
-  .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); position: relative; }
+  .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); position: relative; cursor: pointer; }
   .card img { width: 100%; height: 140px; object-fit: cover; }
   .card-body { padding: 10px; }
   .card-body h3 { font-size: 14px; margin-bottom: 4px; }
   .card-body .precio { color: #556B2F; font-weight: bold; font-size: 16px; }
   .card-body .stock { font-size: 11px; color: #888; margin-top: 4px; }
+
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal.abierto { display: flex; }
   .modal-content { background: white; border-radius: 12px; max-width: 400px; width: 100%; max-height: 90vh; overflow-y: auto; }
@@ -49,9 +54,19 @@
   .modal-body { padding: 16px; }
   .modal-body h2 { margin-bottom: 8px; }
   .btn-whatsapp { display: block; background: #25D366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 12px; font-weight: bold; }
-  .btn-share-product { display: block; background: white; color: #556B2F; text-align: center; padding: 12px; border-radius: 8px; border: 1px solid #556B2F; margin-top: 10px; font-weight: bold; }
-  .btn-cerrar { display: block; text-align: center; padding: 10px; color: #888; }
-  .vacio { text-align: center; padding: 40px; color: #888; }
+  .btn-share-product { display: block; background: white; color: #556B2F; text-align: center; padding: 12px; border-radius: 8px; border: 1px solid #556B2F; margin-top: 10px; font-weight: bold; cursor: pointer; width: 100%; }
+  .btn-cerrar { display: block; text-align: center; padding: 10px; color: #888; cursor: pointer; }
+  .vacio { text-align: center; padding: 40px; color: #888; grid-column: 1 / -1; }
+
+  /* Tablet y PC: se activan automaticamente solo cuando la pantalla es ancha */
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: repeat(4, 1fr); gap: 18px; padding: 24px 12px; }
+    header { padding: 20px 24px; }
+    .filtros { padding: 16px 12px; justify-content: center; }
+  }
+  @media (min-width: 1100px) {
+    .grid { grid-template-columns: repeat(5, 1fr); }
+  }
 </style>
 </head>
 <body>
@@ -62,14 +77,16 @@
 </div>
 
 <header>
-  <div class="header-left">
-    <img src="assets/icon/Logo.png" alt="Kefify">
-    <div class="titulos">
-      <h1>KEFIFY</h1>
-      <p>KEFIR | BULGARIAN CULTURES | HEALTHY</p>
+  <div class="header-inner">
+    <div class="header-left">
+      <img src="assets/icon/Logo.png" alt="Kefify">
+      <div class="titulos">
+        <h1>KEFIFY</h1>
+        <p>KEFIR | BULGARIAN CULTURES | HEALTHY</p>
+      </div>
     </div>
+    <button class="btn-share-page" onclick="compartirPagina()">Share</button>
   </div>
-  <button class="btn-share-page" onclick="compartirPagina()">Share</button>
 </header>
 
 <div class="hero">
