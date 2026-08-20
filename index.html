@@ -25,7 +25,6 @@
   .hero { width: 100%; overflow: hidden; }
   .hero img { width: 100%; height: auto; display: block; max-height: 420px; object-fit: cover; object-position: center; }
 
-  /* Pestanas arriba */
   .top-tabs { display: flex; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 20; }
   .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: #888; font-size: 10px; border-bottom: 3px solid transparent; }
   .tab-btn svg { width: 20px; height: 20px; stroke: #888; fill: none; stroke-width: 2; }
@@ -37,14 +36,12 @@
   .panel h2 { font-size: 22px; margin-bottom: 6px; }
   .panel .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
 
-  /* Benefits */
   .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
   .benefit-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
   .benefit-card .icon { font-size: 28px; margin-bottom: 8px; }
   .benefit-card h3 { font-size: 14px; margin-bottom: 6px; color: #556B2F; }
   .benefit-card p { font-size: 12px; color: #666; line-height: 1.4; }
 
-  /* Products */
   .filtros { display: flex; gap: 8px; padding: 0 0 16px 0; overflow-x: auto; }
   .filtro-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #556B2F; background: white; color: #556B2F; white-space: nowrap; font-size: 13px; cursor: pointer; }
   .filtro-btn.activo { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border-color: #556B2F; }
@@ -59,22 +56,18 @@
   .card-body .stock { font-size: 11px; color: #888; margin-top: 4px; }
   .vacio { text-align: center; padding: 40px; color: #888; grid-column: 1 / -1; }
 
-  /* About */
   .about-box { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
   .about-box p { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 12px; }
 
-  /* Recipes */
   .recipes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
   .recipe-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
   .recipe-card h3 { font-size: 15px; color: #556B2F; margin-bottom: 8px; }
   .recipe-card p { font-size: 13px; color: #666; line-height: 1.5; }
 
-  /* Contact */
   .contact-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
   .contact-box p { font-size: 14px; color: #444; margin-bottom: 18px; }
   .btn-contact-whatsapp { display: inline-block; background: #25D366; color: white; padding: 12px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 14px; }
 
-  /* Modal producto */
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal.abierto { display: flex; }
   .modal-content { background: white; border-radius: 12px; max-width: 400px; width: 100%; max-height: 90vh; overflow-y: auto; }
@@ -238,10 +231,10 @@ const WHATSAPP_NUMBER = '447446830987';
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/productos`;
 const SITE_URL = 'https://kefify.co.uk/';
 
-const CATEGORIAS_FIJAS = ['Artisanal Dairy', 'Ice Cream', 'Yogurt', 'Desserts', 'Drinks'];
+const CATEGORIAS_FIJAS = ['Drinks', 'Yogurt', 'Desserts', 'Ice Cream', 'Artisanal Dairy'];
 
 let productos = [];
-let categoriaActiva = 'Artisanal Dairy';
+let categoriaActiva = 'Drinks';
 let productoActual = null;
 
 function entrarCatalogo() {
