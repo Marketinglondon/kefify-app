@@ -24,6 +24,11 @@
   .filtro-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #2d8a6e; background: white; color: #2d8a6e; white-space: nowrap; font-size: 13px; }
   .filtro-btn.activo { background: #2d8a6e; color: white; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 12px; }
+  .grid.transicionando { animation: fadeSlide 0.35s ease; }
+  @keyframes fadeSlide {
+    0% { opacity: 0; transform: translateX(20px); }
+    100% { opacity: 1; transform: translateX(0); }
+  }
   .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
   .card img { width: 100%; height: 140px; object-fit: cover; }
   .card-body { padding: 10px; }
@@ -77,8 +82,10 @@ const PROJECT_ID = 'kefify-86360';
 const WHATSAPP_NUMBER = '447446830987';
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/productos`;
 
+const CATEGORIAS_FIJAS = ['Artisanal Dairy', 'Ice Cream', 'Yogurt', 'Desserts', 'Drinks'];
+
 let productos = [];
-let categoriaActiva = 'All';
+let categoriaActiva = 'Artisanal Dairy';
 
 function entrarCatalogo() {
   const splash = document.getElementById('splash');
@@ -118,14 +125,14 @@ async function cargarProductos() {
 }
 
 function renderFiltros() {
-  const categorias = ['All', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
   const cont = document.getElementById('filtros');
-  cont.innerHTML = categorias.map(c =>
+  cont.innerHTML = CATEGORIAS_FIJAS.map(c =>
     `<button class="filtro-btn ${c === categoriaActiva ? 'activo' : ''}" onclick="filtrar('${c}')">${c}</button>`
   ).join('');
 }
 
 function filtrar(cat) {
+  if (cat === categoriaActiva) return;
   categoriaActiva = cat;
   renderFiltros();
   renderGrid();
@@ -133,21 +140,26 @@ function filtrar(cat) {
 
 function renderGrid() {
   const grid = document.getElementById('grid');
-  const lista = productos.filter(p => categoriaActiva === 'All' || p.categoria === categoriaActiva);
+  const lista = productos.filter(p => p.categoria === categoriaActiva);
+
   if (lista.length === 0) {
     grid.innerHTML = '<p class="vacio">No products in this category yet.</p>';
-    return;
-  }
-  grid.innerHTML = lista.map((p, i) => `
-    <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
-      <img src="${p.fotos[0] || ''}" alt="${p.nombre}" onerror="this.style.display='none'">
-      <div class="card-body">
-        <h3>${p.nombre}</h3>
-        <div class="precio">$${p.precioVenta.toFixed(0)}</div>
-        <div class="stock">${p.enStock ? 'In stock' : 'Out of stock'}</div>
+  } else {
+    grid.innerHTML = lista.map((p, i) => `
+      <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
+        <img src="${p.fotos[0] || ''}" alt="${p.nombre}" onerror="this.style.display='none'">
+        <div class="card-body">
+          <h3>${p.nombre}</h3>
+          <div class="precio">$${p.precioVenta.toFixed(0)}</div>
+          <div class="stock">${p.enStock ? 'In stock' : 'Out of stock'}</div>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
+
+  grid.classList.remove('transicionando');
+  void grid.offsetWidth;
+  grid.classList.add('transicionando');
 }
 
 function abrirModal(index) {
