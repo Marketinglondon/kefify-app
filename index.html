@@ -7,15 +7,21 @@
 <meta property="og:title" content="Kefify">
 <meta property="og:description" content="Catalogo de productos Kefify: bebidas, helados, postres, quesos y mantequilla de kefir">
 <meta property="og:type" content="website">
+<link rel="icon" href="assets/icon/icon.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, sans-serif; background: #f4f9f7; color: #1a3a32; }
-  header { background: linear-gradient(135deg, #1a5c4a, #2d8a6e); color: white; padding: 24px 16px; text-align: center; }
-  header h1 { font-size: 28px; letter-spacing: 1px; }
-  header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
-  #splash { position: fixed; inset: 0; background: #1a5c4a; display: flex; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.5s; }
-  #splash h1 { color: white; font-size: 32px; animation: pulse 1.2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  header { background: linear-gradient(135deg, #1a5c4a, #2d8a6e); color: white; padding: 20px 16px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  header img { width: 44px; height: 44px; border-radius: 8px; }
+  header .titulos { text-align: left; }
+  header h1 { font-size: 24px; letter-spacing: 1px; }
+  header p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
+  #splash { position: fixed; inset: 0; background: #1a5c4a; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.8s; padding: 24px; text-align: center; }
+  #splash img { width: 140px; height: 140px; margin-bottom: 20px; animation: pulse 3.2s ease-in-out infinite; }
+  #splash h1 { color: white; font-size: 34px; letter-spacing: 2px; margin-bottom: 6px; }
+  #splash p { color: #cfe9de; font-size: 13px; margin-bottom: 30px; letter-spacing: 1px; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } }
+  #btnEntrar { background: white; color: #1a5c4a; border: none; padding: 14px 32px; border-radius: 30px; font-size: 15px; font-weight: bold; letter-spacing: 0.5px; }
   .filtros { display: flex; gap: 8px; padding: 12px; overflow-x: auto; background: white; position: sticky; top: 0; z-index: 10; }
   .filtro-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #2d8a6e; background: white; color: #2d8a6e; white-space: nowrap; font-size: 13px; }
   .filtro-btn.activo { background: #2d8a6e; color: white; }
@@ -39,11 +45,19 @@
 </head>
 <body>
 
-<div id="splash"><h1>Kefify</h1></div>
+<div id="splash">
+  <img src="assets/icon/icon.png" alt="Kefify">
+  <h1>KEFIFY</h1>
+  <p>KEFIR | BULGAROS | SALUDABLE</p>
+  <button id="btnEntrar" onclick="entrarCatalogo()">Descubre tu equilibrio</button>
+</div>
 
 <header>
-  <h1>Kefify</h1>
-  <p>Kefir | Bulgaros | Saludable</p>
+  <img src="assets/icon/icon.png" alt="Kefify">
+  <div class="titulos">
+    <h1>Kefify</h1>
+    <p>Kefir | Bulgaros | Saludable</p>
+  </div>
 </header>
 
 <div class="filtros" id="filtros"></div>
@@ -69,6 +83,12 @@ const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID
 
 let productos = [];
 let categoriaActiva = 'Todas';
+
+function entrarCatalogo() {
+  const splash = document.getElementById('splash');
+  splash.style.opacity = '0';
+  setTimeout(() => splash.style.display = 'none', 800);
+}
 
 function parseFirestoreDoc(doc) {
   const f = doc.fields || {};
@@ -99,8 +119,6 @@ async function cargarProductos() {
   } catch (e) {
     document.getElementById('grid').innerHTML = '<p class="vacio">No se pudo cargar el catalogo. Intenta de nuevo.</p>';
   }
-  document.getElementById('splash').style.opacity = '0';
-  setTimeout(() => document.getElementById('splash').style.display = 'none', 500);
 }
 
 function renderFiltros() {
