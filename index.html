@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kefify - Kefir, Bulgaros, Saludable</title>
+<title>Kefify - Kefir, Bulgarian Grains, Healthy</title>
 <meta property="og:title" content="Kefify">
-<meta property="og:description" content="Catalogo de productos Kefify: bebidas, helados, postres, quesos y mantequilla de kefir">
+<meta property="og:description" content="Kefify catalog: kefir drinks, ice cream, desserts, cheese and butter">
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/icon/icon.png">
 <style>
@@ -45,14 +45,14 @@
 
 <div id="splash">
   <img src="assets/icon/icon.png" alt="Kefify">
-  <button id="btnEntrar" onclick="entrarCatalogo()">Descubre tu equilibrio</button>
+  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance</button>
 </div>
 
 <header>
   <img src="assets/icon/icon.png" alt="Kefify">
   <div class="titulos">
     <h1>Kefify</h1>
-    <p>Kefir | Bulgaros | Saludable</p>
+    <p>Kefir | Bulgarian Grains | Healthy</p>
   </div>
 </header>
 
@@ -66,8 +66,8 @@
       <h2 id="modalNombre"></h2>
       <p id="modalDesc" style="color:#666; font-size:14px; margin-top:6px;"></p>
       <p class="precio" id="modalPrecio" style="font-size:20px; margin-top:10px;"></p>
-      <a href="#" id="modalWhatsapp" class="btn-whatsapp" target="_blank">Preguntar por WhatsApp</a>
-      <div class="btn-cerrar" onclick="cerrarModal()">Cerrar</div>
+      <a href="#" id="modalWhatsapp" class="btn-whatsapp" target="_blank">Ask on WhatsApp</a>
+      <div class="btn-cerrar" onclick="cerrarModal()">Close</div>
     </div>
   </div>
 </div>
@@ -78,7 +78,7 @@ const WHATSAPP_NUMBER = '447446830987';
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/productos`;
 
 let productos = [];
-let categoriaActiva = 'Todas';
+let categoriaActiva = 'All';
 
 function entrarCatalogo() {
   const splash = document.getElementById('splash');
@@ -113,12 +113,12 @@ async function cargarProductos() {
     renderFiltros();
     renderGrid();
   } catch (e) {
-    document.getElementById('grid').innerHTML = '<p class="vacio">No se pudo cargar el catalogo. Intenta de nuevo.</p>';
+    document.getElementById('grid').innerHTML = '<p class="vacio">Could not load the catalog. Please try again.</p>';
   }
 }
 
 function renderFiltros() {
-  const categorias = ['Todas', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
+  const categorias = ['All', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
   const cont = document.getElementById('filtros');
   cont.innerHTML = categorias.map(c =>
     `<button class="filtro-btn ${c === categoriaActiva ? 'activo' : ''}" onclick="filtrar('${c}')">${c}</button>`
@@ -133,9 +133,9 @@ function filtrar(cat) {
 
 function renderGrid() {
   const grid = document.getElementById('grid');
-  const lista = productos.filter(p => categoriaActiva === 'Todas' || p.categoria === categoriaActiva);
+  const lista = productos.filter(p => categoriaActiva === 'All' || p.categoria === categoriaActiva);
   if (lista.length === 0) {
-    grid.innerHTML = '<p class="vacio">No hay productos en esta categoria todavia.</p>';
+    grid.innerHTML = '<p class="vacio">No products in this category yet.</p>';
     return;
   }
   grid.innerHTML = lista.map((p, i) => `
@@ -144,7 +144,7 @@ function renderGrid() {
       <div class="card-body">
         <h3>${p.nombre}</h3>
         <div class="precio">$${p.precioVenta.toFixed(0)}</div>
-        <div class="stock">${p.enStock ? 'En stock' : 'Agotado'}</div>
+        <div class="stock">${p.enStock ? 'In stock' : 'Out of stock'}</div>
       </div>
     </div>
   `).join('');
@@ -157,7 +157,7 @@ function abrirModal(index) {
   document.getElementById('modalDesc').textContent =
     [p.sabor, p.presentacion, p.descripcion].filter(Boolean).join(' | ');
   document.getElementById('modalPrecio').textContent = '$' + p.precioVenta.toFixed(0);
-  const mensaje = encodeURIComponent(`Hola, me interesa el producto: ${p.nombre}`);
+  const mensaje = encodeURIComponent(`Hi, I'm interested in this product: ${p.nombre}`);
   document.getElementById('modalWhatsapp').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${mensaje}`;
   document.getElementById('modal').classList.add('abierto');
 }
