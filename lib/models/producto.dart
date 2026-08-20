@@ -7,6 +7,7 @@ class Producto {
   String presentacion;
   double costoProveedor;
   double precioVenta;
+  double precioVentaCOP;
   bool enStock;
   List<String> fotos;
   String proveedorNombre;
@@ -23,6 +24,7 @@ class Producto {
     this.presentacion = '',
     this.costoProveedor = 0,
     this.precioVenta = 0,
+    this.precioVentaCOP = 0,
     this.enStock = true,
     this.fotos = const [],
     this.proveedorNombre = '',
@@ -40,6 +42,7 @@ class Producto {
       'presentacion': presentacion,
       'costoProveedor': costoProveedor,
       'precioVenta': precioVenta,
+      'precioVentaCOP': precioVentaCOP,
       'enStock': enStock,
       'fotos': fotos,
       'proveedorNombre': proveedorNombre,
@@ -59,6 +62,7 @@ class Producto {
       presentacion: map['presentacion'] ?? '',
       costoProveedor: (map['costoProveedor'] ?? 0).toDouble(),
       precioVenta: (map['precioVenta'] ?? 0).toDouble(),
+      precioVentaCOP: (map['precioVentaCOP'] ?? 0).toDouble(),
       enStock: map['enStock'] ?? true,
       fotos: List<String>.from(map['fotos'] ?? []),
       proveedorNombre: map['proveedorNombre'] ?? '',
