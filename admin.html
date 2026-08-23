@@ -33,6 +33,10 @@
   #loginBox { max-width: 320px; margin: 80px auto; text-align: center; }
   #loginBox input { margin-top: 12px; }
   #loginBox button { margin-top: 14px; }
+  .campo-traduciendo { position: relative; }
+  .spinner-mini { display: inline-block; width: 12px; height: 12px; border: 2px solid #ccc; border-top-color: #556B2F; border-radius: 50%; animation: girar 0.7s linear infinite; margin-left: 6px; vertical-align: middle; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  .idioma-tag { display: inline-block; font-size: 11px; background: #f0f4e8; color: #556B2F; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
 </style>
 </head>
 <body>
@@ -56,8 +60,11 @@
     <input type="file" id="fotosInput" accept="image/*" multiple>
     <div class="fotos-preview" id="fotosPreview"></div>
 
-    <label>Nombre</label>
+    <label>Nombre <span class="idioma-tag">Inglés</span></label>
     <input type="text" id="nombre">
+
+    <label>Nombre <span class="idioma-tag">Español</span> <span id="spinnerNombre" style="display:none;" class="spinner-mini"></span></label>
+    <input type="text" id="nombreEs" placeholder="Se autocompleta al salir del campo de arriba">
 
     <label>Código (opcional)</label>
     <input type="text" id="codigo">
@@ -82,8 +89,11 @@
       </div>
     </div>
 
-    <label>Descripción</label>
+    <label>Descripción <span class="idioma-tag">Inglés</span></label>
     <textarea id="descripcion"></textarea>
+
+    <label>Descripción <span class="idioma-tag">Español</span> <span id="spinnerDesc" style="display:none;" class="spinner-mini"></span></label>
+    <textarea id="descripcionEs" placeholder="Se autocompleta al salir del campo de arriba"></textarea>
 
     <div class="row">
       <div>
@@ -146,6 +156,35 @@ function verificarCodigo() {
   }
 }
 
+async function traducirTexto(texto) {
+  if (!texto) return '';
+  try {
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=en|es`);
+    const data = await res.json();
+    return data.responseData?.translatedText || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+document.getElementById('nombre').addEventListener('blur', async () => {
+  const origen = document.getElementById('nombre').value.trim();
+  const destino = document.getElementById('nombreEs');
+  if (!origen || destino.value.trim()) return;
+  document.getElementById('spinnerNombre').style.display = 'inline-block';
+  destino.value = await traducirTexto(origen);
+  document.getElementById('spinnerNombre').style.display = 'none';
+});
+
+document.getElementById('descripcion').addEventListener('blur', async () => {
+  const origen = document.getElementById('descripcion').value.trim();
+  const destino = document.getElementById('descripcionEs');
+  if (!origen || destino.value.trim()) return;
+  document.getElementById('spinnerDesc').style.display = 'inline-block';
+  destino.value = await traducirTexto(origen);
+  document.getElementById('spinnerDesc').style.display = 'none';
+});
+
 document.getElementById('fotosInput').addEventListener('change', async (e) => {
   const archivos = Array.from(e.target.files);
   const estado = document.getElementById('estado');
@@ -203,8 +242,10 @@ function fromFirestoreDoc(doc) {
   const getArr = (k) => (f[k]?.arrayValue?.values || []).map(v => v.stringValue);
   return {
     id: doc.name.split('/').pop(),
-    nombre: getStr('nombre'), codigo: getStr('codigo'), categoria: getStr('categoria'),
-    sabor: getStr('sabor'), presentacion: getStr('presentacion'), descripcion: getStr('descripcion'),
+    nombre: getStr('nombre'), nombreEs: getStr('nombreEs'),
+    codigo: getStr('codigo'), categoria: getStr('categoria'),
+    sabor: getStr('sabor'), presentacion: getStr('presentacion'),
+    descripcion: getStr('descripcion'), descripcionEs: getStr('descripcionEs'),
     costoProveedor: getNum('costoProveedor'), precioVenta: getNum('precioVenta'), precioVentaCOP: getNum('precioVentaCOP'),
     enStock: getBool('enStock'), fotos: getArr('fotos'),
     proveedorNombre: getStr('proveedorNombre'), proveedorWhatsapp: getStr('proveedorWhatsapp'),
@@ -219,11 +260,13 @@ async function guardarProducto() {
 
   const datos = {
     nombre,
+    nombreEs: document.getElementById('nombreEs').value.trim(),
     codigo: document.getElementById('codigo').value.trim(),
     categoria: document.getElementById('categoria').value,
     sabor: document.getElementById('sabor').value.trim(),
     presentacion: document.getElementById('presentacion').value.trim(),
     descripcion: document.getElementById('descripcion').value.trim(),
+    descripcionEs: document.getElementById('descripcionEs').value.trim(),
     costoProveedor: parseFloat(document.getElementById('costoProveedor').value) || 0,
     precioVenta: parseFloat(document.getElementById('precioVenta').value) || 0,
     precioVentaCOP: parseFloat(document.getElementById('precioVentaCOP').value) || 0,
@@ -267,7 +310,7 @@ function limpiarFormulario() {
   fotosSubidas = [];
   renderFotosPreview();
   document.getElementById('formTitulo').textContent = 'Nuevo producto';
-  ['nombre','codigo','sabor','presentacion','descripcion','costoProveedor','precioVenta','precioVentaCOP','proveedorNombre','proveedorWhatsapp'].forEach(id => document.getElementById(id).value = '');
+  ['nombre','nombreEs','codigo','sabor','presentacion','descripcion','descripcionEs','costoProveedor','precioVenta','precioVentaCOP','proveedorNombre','proveedorWhatsapp'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('categoria').value = 'Drinks';
   document.getElementById('enStock').checked = true;
   document.getElementById('estado').textContent = '';
@@ -310,11 +353,13 @@ function editarProducto(id) {
   renderFotosPreview();
   document.getElementById('formTitulo').textContent = 'Editar producto';
   document.getElementById('nombre').value = p.nombre;
+  document.getElementById('nombreEs').value = p.nombreEs;
   document.getElementById('codigo').value = p.codigo;
   document.getElementById('categoria').value = p.categoria;
   document.getElementById('sabor').value = p.sabor;
   document.getElementById('presentacion').value = p.presentacion;
   document.getElementById('descripcion').value = p.descripcion;
+  document.getElementById('descripcionEs').value = p.descripcionEs;
   document.getElementById('costoProveedor').value = p.costoProveedor;
   document.getElementById('precioVenta').value = p.precioVenta;
   document.getElementById('precioVentaCOP').value = p.precioVentaCOP;
@@ -335,4 +380,4 @@ async function eliminarProducto(id) {
 }
 </script>
 </body>
-  </html>
+</html>
