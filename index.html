@@ -215,8 +215,8 @@
       <p id="txt-r2d">Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.</p>
     </div>
     <div class="recipe-card">
-      <h3 id="txt-r3t">Yogurt Bowl</h3>
-      <p id="txt-r3d">Layer Kefify yogurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.</p>
+      <h3 id="txt-r3t">Yoghurt Bowl</h3>
+      <p id="txt-r3d">Layer Kefify yoghurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.</p>
     </div>
   </div>
 </div>
@@ -296,7 +296,7 @@ const T = {
     b3t: 'Immune support', b3d: 'Supports a stronger immune system with regular consumption.',
     b4t: 'Bone health', b4d: 'A good source of calcium and protein for stronger bones.',
     productsTitle: 'Products', productsSub: 'Explore our full range',
-    categories: { Drinks: 'Drinks', Yogurt: 'Yogurt', Desserts: 'Desserts', 'Ice Cream': 'Ice Cream', 'Artisanal Dairy': 'Artisanal Dairy' },
+    categories: { Drinks: 'Drinks', Yogurt: 'Yoghurt', Desserts: 'Desserts', 'Ice Cream': 'Ice Cream', 'Artisanal Dairy': 'Artisanal Dairy' },
     inStock: 'In stock', outStock: 'Out of stock',
     noProducts: 'No products in this category yet.', loadError: 'Could not load the catalog. Please try again.',
     aboutTitle: 'About Us', aboutSub: 'Our story',
@@ -305,7 +305,7 @@ const T = {
     recipesTitle: 'Recipes', recipesSub: 'Simple ideas with Kefify products',
     r1t: 'Kefir Smoothie', r1d: 'Blend Kefify kefir drink with your favourite fruits and a spoon of honey for a refreshing breakfast.',
     r2t: 'Herb Butter Toast', r2d: 'Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.',
-    r3t: 'Yogurt Bowl', r3d: 'Layer Kefify yogurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.',
+    r3t: 'Yoghurt Bowl', r3d: 'Layer Kefify yoghurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.',
     contactTitle: 'Contact', contactSub: "We'd love to hear from you",
     contactP: "Message us directly on WhatsApp and we'll get back to you shortly.",
     contactBtn: '🇬🇧 Message us on WhatsApp',
@@ -548,9 +548,10 @@ function abrirModal(index) {
   document.getElementById('mDesc').textContent =
     [p.sabor, p.presentacion, descripcionMostrar].filter(Boolean).join(' | ');
   document.getElementById('mIngr').textContent = ingredientesMostrar || t.noIngr;
-  document.getElementById('nutriTable').outerHTML = construirTablaNutricion(p, t).includes('<table')
-    ? construirTablaNutricion(p, t)
-    : `<div id="nutriTable">${construirTablaNutricion(p, t)}</div>`;
+
+  const nutriHtml = construirTablaNutricion(p, t);
+  const nutriPanel = document.getElementById('mNutri');
+  nutriPanel.innerHTML = nutriHtml;
 
   mostrarModalPanel('mDesc');
 
