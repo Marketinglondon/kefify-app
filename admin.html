@@ -33,10 +33,11 @@
   #loginBox { max-width: 320px; margin: 80px auto; text-align: center; }
   #loginBox input { margin-top: 12px; }
   #loginBox button { margin-top: 14px; }
-  .campo-traduciendo { position: relative; }
   .spinner-mini { display: inline-block; width: 12px; height: 12px; border: 2px solid #ccc; border-top-color: #556B2F; border-radius: 50%; animation: girar 0.7s linear infinite; margin-left: 6px; vertical-align: middle; }
   @keyframes girar { to { transform: rotate(360deg); } }
   .idioma-tag { display: inline-block; font-size: 11px; background: #f0f4e8; color: #556B2F; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+  .seccion-titulo { font-size: 15px; font-weight: bold; color: #556B2F; margin-top: 20px; border-top: 1px solid #eee; padding-top: 14px; }
+  .nutri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -64,7 +65,7 @@
     <input type="text" id="nombre">
 
     <label>Nombre <span class="idioma-tag">Español</span> <span id="spinnerNombre" style="display:none;" class="spinner-mini"></span></label>
-    <input type="text" id="nombreEs" placeholder="Se autocompleta al salir del campo de arriba">
+    <input type="text" id="nombreEs">
 
     <label>Código (opcional)</label>
     <input type="text" id="codigo">
@@ -89,12 +90,32 @@
       </div>
     </div>
 
+    <div class="seccion-titulo">Description</div>
     <label>Descripción <span class="idioma-tag">Inglés</span></label>
     <textarea id="descripcion"></textarea>
-
     <label>Descripción <span class="idioma-tag">Español</span> <span id="spinnerDesc" style="display:none;" class="spinner-mini"></span></label>
-    <textarea id="descripcionEs" placeholder="Se autocompleta al salir del campo de arriba"></textarea>
+    <textarea id="descripcionEs"></textarea>
 
+    <div class="seccion-titulo">Ingredients</div>
+    <label>Ingredientes <span class="idioma-tag">Inglés</span></label>
+    <textarea id="ingredientes"></textarea>
+    <label>Ingredientes <span class="idioma-tag">Español</span> <span id="spinnerIngr" style="display:none;" class="spinner-mini"></span></label>
+    <textarea id="ingredientesEs"></textarea>
+
+    <div class="seccion-titulo">Nutrition (per 100g)</div>
+    <div class="nutri-grid">
+      <div><label>Energy kJ</label><input type="text" id="nutriEnergiaKJ" placeholder="ej. 242"></div>
+      <div><label>Energy kcal</label><input type="text" id="nutriEnergiaKcal" placeholder="ej. 58"></div>
+      <div><label>Fat</label><input type="text" id="nutriGrasa" placeholder="ej. 3.0g"></div>
+      <div><label>of which saturates</label><input type="text" id="nutriGrasaSat" placeholder="ej. 1.9g"></div>
+      <div><label>Carbohydrates</label><input type="text" id="nutriCarbo" placeholder="ej. 4.4g"></div>
+      <div><label>of which sugars</label><input type="text" id="nutriAzucar" placeholder="ej. 3.7g"></div>
+      <div><label>Fibre</label><input type="text" id="nutriFibra" placeholder="ej. <0.5g"></div>
+      <div><label>Protein</label><input type="text" id="nutriProteina" placeholder="ej. 3.3g"></div>
+      <div><label>Salt</label><input type="text" id="nutriSal" placeholder="ej. 0.10g"></div>
+    </div>
+
+    <div class="seccion-titulo">Precios y stock</div>
     <div class="row">
       <div>
         <label>Costo proveedor (£)</label>
@@ -105,7 +126,6 @@
         <input type="number" id="precioVenta">
       </div>
     </div>
-
     <label>Precio venta Colombia ($ COP)</label>
     <input type="number" id="precioVentaCOP">
 
@@ -114,9 +134,9 @@
       <label style="margin:0;">En stock</label>
     </div>
 
+    <div class="seccion-titulo">Proveedor</div>
     <label>Nombre del proveedor</label>
     <input type="text" id="proveedorNombre">
-
     <label>WhatsApp del proveedor</label>
     <input type="text" id="proveedorWhatsapp">
 
@@ -140,6 +160,8 @@ const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID
 const CLOUDINARY_CLOUD = 'iggcl810';
 const CLOUDINARY_PRESET = 'kefify_preset';
 const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
+
+const CAMPOS_TEXTO = ['nombre','nombreEs','codigo','sabor','presentacion','descripcion','descripcionEs','ingredientes','ingredientesEs','proveedorNombre','proveedorWhatsapp','nutriEnergiaKJ','nutriEnergiaKcal','nutriGrasa','nutriGrasaSat','nutriCarbo','nutriAzucar','nutriFibra','nutriProteina','nutriSal'];
 
 let fotosSubidas = [];
 let editandoId = null;
@@ -167,23 +189,19 @@ async function traducirTexto(texto) {
   }
 }
 
-document.getElementById('nombre').addEventListener('blur', async () => {
-  const origen = document.getElementById('nombre').value.trim();
-  const destino = document.getElementById('nombreEs');
-  if (!origen || destino.value.trim()) return;
-  document.getElementById('spinnerNombre').style.display = 'inline-block';
-  destino.value = await traducirTexto(origen);
-  document.getElementById('spinnerNombre').style.display = 'none';
-});
-
-document.getElementById('descripcion').addEventListener('blur', async () => {
-  const origen = document.getElementById('descripcion').value.trim();
-  const destino = document.getElementById('descripcionEs');
-  if (!origen || destino.value.trim()) return;
-  document.getElementById('spinnerDesc').style.display = 'inline-block';
-  destino.value = await traducirTexto(origen);
-  document.getElementById('spinnerDesc').style.display = 'none';
-});
+function conectarAutoTraduccion(idOrigen, idDestino, idSpinner) {
+  document.getElementById(idOrigen).addEventListener('blur', async () => {
+    const origen = document.getElementById(idOrigen).value.trim();
+    const destino = document.getElementById(idDestino);
+    if (!origen || destino.value.trim()) return;
+    document.getElementById(idSpinner).style.display = 'inline-block';
+    destino.value = await traducirTexto(origen);
+    document.getElementById(idSpinner).style.display = 'none';
+  });
+}
+conectarAutoTraduccion('nombre', 'nombreEs', 'spinnerNombre');
+conectarAutoTraduccion('descripcion', 'descripcionEs', 'spinnerDesc');
+conectarAutoTraduccion('ingredientes', 'ingredientesEs', 'spinnerIngr');
 
 document.getElementById('fotosInput').addEventListener('change', async (e) => {
   const archivos = Array.from(e.target.files);
@@ -240,17 +258,15 @@ function fromFirestoreDoc(doc) {
   const getNum = (k) => parseFloat(f[k]?.doubleValue ?? f[k]?.integerValue ?? 0);
   const getBool = (k) => f[k]?.booleanValue ?? true;
   const getArr = (k) => (f[k]?.arrayValue?.values || []).map(v => v.stringValue);
-  return {
+  const obj = {
     id: doc.name.split('/').pop(),
-    nombre: getStr('nombre'), nombreEs: getStr('nombreEs'),
-    codigo: getStr('codigo'), categoria: getStr('categoria'),
-    sabor: getStr('sabor'), presentacion: getStr('presentacion'),
-    descripcion: getStr('descripcion'), descripcionEs: getStr('descripcionEs'),
+    categoria: getStr('categoria'),
     costoProveedor: getNum('costoProveedor'), precioVenta: getNum('precioVenta'), precioVentaCOP: getNum('precioVentaCOP'),
     enStock: getBool('enStock'), fotos: getArr('fotos'),
-    proveedorNombre: getStr('proveedorNombre'), proveedorWhatsapp: getStr('proveedorWhatsapp'),
     fechaCreacion: getStr('fechaCreacion')
   };
+  CAMPOS_TEXTO.forEach(c => obj[c] = getStr(c));
+  return obj;
 }
 
 async function guardarProducto() {
@@ -259,23 +275,15 @@ async function guardarProducto() {
   if (!nombre) { estado.textContent = 'Escribe el nombre del producto'; return; }
 
   const datos = {
-    nombre,
-    nombreEs: document.getElementById('nombreEs').value.trim(),
-    codigo: document.getElementById('codigo').value.trim(),
     categoria: document.getElementById('categoria').value,
-    sabor: document.getElementById('sabor').value.trim(),
-    presentacion: document.getElementById('presentacion').value.trim(),
-    descripcion: document.getElementById('descripcion').value.trim(),
-    descripcionEs: document.getElementById('descripcionEs').value.trim(),
     costoProveedor: parseFloat(document.getElementById('costoProveedor').value) || 0,
     precioVenta: parseFloat(document.getElementById('precioVenta').value) || 0,
     precioVentaCOP: parseFloat(document.getElementById('precioVentaCOP').value) || 0,
     enStock: document.getElementById('enStock').checked,
     fotos: fotosSubidas,
-    proveedorNombre: document.getElementById('proveedorNombre').value.trim(),
-    proveedorWhatsapp: document.getElementById('proveedorWhatsapp').value.trim(),
     fechaCreacion: new Date().toISOString()
   };
+  CAMPOS_TEXTO.forEach(c => datos[c] = document.getElementById(c).value.trim());
 
   estado.textContent = 'Guardando...';
   try {
@@ -310,7 +318,8 @@ function limpiarFormulario() {
   fotosSubidas = [];
   renderFotosPreview();
   document.getElementById('formTitulo').textContent = 'Nuevo producto';
-  ['nombre','nombreEs','codigo','sabor','presentacion','descripcion','descripcionEs','costoProveedor','precioVenta','precioVentaCOP','proveedorNombre','proveedorWhatsapp'].forEach(id => document.getElementById(id).value = '');
+  CAMPOS_TEXTO.forEach(id => document.getElementById(id).value = '');
+  ['costoProveedor','precioVenta','precioVentaCOP'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('categoria').value = 'Drinks';
   document.getElementById('enStock').checked = true;
   document.getElementById('estado').textContent = '';
@@ -352,20 +361,12 @@ function editarProducto(id) {
   fotosSubidas = [...p.fotos];
   renderFotosPreview();
   document.getElementById('formTitulo').textContent = 'Editar producto';
-  document.getElementById('nombre').value = p.nombre;
-  document.getElementById('nombreEs').value = p.nombreEs;
-  document.getElementById('codigo').value = p.codigo;
+  CAMPOS_TEXTO.forEach(c => document.getElementById(c).value = p[c] || '');
   document.getElementById('categoria').value = p.categoria;
-  document.getElementById('sabor').value = p.sabor;
-  document.getElementById('presentacion').value = p.presentacion;
-  document.getElementById('descripcion').value = p.descripcion;
-  document.getElementById('descripcionEs').value = p.descripcionEs;
   document.getElementById('costoProveedor').value = p.costoProveedor;
   document.getElementById('precioVenta').value = p.precioVenta;
   document.getElementById('precioVentaCOP').value = p.precioVentaCOP;
   document.getElementById('enStock').checked = p.enStock;
-  document.getElementById('proveedorNombre').value = p.proveedorNombre;
-  document.getElementById('proveedorWhatsapp').value = p.proveedorWhatsapp;
   window.scrollTo(0, 0);
 }
 
