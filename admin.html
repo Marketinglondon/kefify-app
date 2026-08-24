@@ -81,7 +81,7 @@
 
     <div class="row">
       <div>
-        <label>Sabor</label>
+        <label>Sabor <span class="idioma-tag">Inglés</span></label>
         <input type="text" id="sabor">
       </div>
       <div>
@@ -89,6 +89,8 @@
         <input type="text" id="presentacion">
       </div>
     </div>
+    <label>Sabor <span class="idioma-tag">Español</span> <span id="spinnerSabor" style="display:none;" class="spinner-mini"></span></label>
+    <input type="text" id="saborEs">
 
     <div class="seccion-titulo">Description</div>
     <label>Descripción <span class="idioma-tag">Inglés</span></label>
@@ -161,7 +163,7 @@ const CLOUDINARY_CLOUD = 'iggcl810';
 const CLOUDINARY_PRESET = 'kefify_preset';
 const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
 
-const CAMPOS_TEXTO = ['nombre','nombreEs','codigo','sabor','presentacion','descripcion','descripcionEs','ingredientes','ingredientesEs','proveedorNombre','proveedorWhatsapp','nutriEnergiaKJ','nutriEnergiaKcal','nutriGrasa','nutriGrasaSat','nutriCarbo','nutriAzucar','nutriFibra','nutriProteina','nutriSal'];
+const CAMPOS_TEXTO = ['nombre','nombreEs','codigo','sabor','saborEs','presentacion','descripcion','descripcionEs','ingredientes','ingredientesEs','proveedorNombre','proveedorWhatsapp','nutriEnergiaKJ','nutriEnergiaKcal','nutriGrasa','nutriGrasaSat','nutriCarbo','nutriAzucar','nutriFibra','nutriProteina','nutriSal'];
 
 let fotosSubidas = [];
 let editandoId = null;
@@ -202,6 +204,7 @@ function conectarAutoTraduccion(idOrigen, idDestino, idSpinner) {
 conectarAutoTraduccion('nombre', 'nombreEs', 'spinnerNombre');
 conectarAutoTraduccion('descripcion', 'descripcionEs', 'spinnerDesc');
 conectarAutoTraduccion('ingredientes', 'ingredientesEs', 'spinnerIngr');
+conectarAutoTraduccion('sabor', 'saborEs', 'spinnerSabor');
 
 document.getElementById('fotosInput').addEventListener('change', async (e) => {
   const archivos = Array.from(e.target.files);
