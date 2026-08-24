@@ -73,10 +73,22 @@
 
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal.abierto { display: flex; }
-  .modal-content { background: white; border-radius: 12px; max-width: 400px; width: 100%; max-height: 90vh; overflow-y: auto; }
-  .modal-content img { width: 100%; max-height: 400px; object-fit: contain; background: #f4f9f7; }
+  .modal-content { background: white; border-radius: 12px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal-content img { width: 100%; max-height: 320px; object-fit: contain; background: #f4f9f7; }
   .modal-body { padding: 16px; }
   .modal-body h2 { margin-bottom: 8px; }
+  .modal-precio { font-size: 20px; margin: 10px 0; color: #556B2F; font-weight: bold; }
+
+  .modal-tabs { display: flex; border-bottom: 1px solid #eee; margin-top: 12px; }
+  .modal-tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; font-size: 12px; color: #888; border-bottom: 2px solid transparent; cursor: pointer; }
+  .modal-tab-btn.activo { color: #556B2F; font-weight: bold; border-bottom-color: #556B2F; }
+  .modal-panel { display: none; padding: 14px 2px; font-size: 13px; color: #444; line-height: 1.6; }
+  .modal-panel.activo { display: block; }
+  .nutri-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .nutri-table td { padding: 6px 4px; border-bottom: 1px solid #eee; }
+  .nutri-table tr:first-child td { font-weight: bold; background: #f4f9f7; }
+  .nutri-table td:last-child { text-align: right; }
+
   .btn-whatsapp { display: block; background: #25D366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 12px; font-weight: bold; }
   .btn-share-product { display: block; background: white; color: #556B2F; text-align: center; padding: 12px; border-radius: 8px; border: 1px solid #556B2F; margin-top: 10px; font-weight: bold; cursor: pointer; width: 100%; }
   .btn-cerrar { display: block; text-align: center; padding: 10px; color: #888; cursor: pointer; }
@@ -223,8 +235,20 @@
     <img id="modalImg" src="" alt="">
     <div class="modal-body">
       <h2 id="modalNombre"></h2>
-      <p id="modalDesc" style="color:#666; font-size:14px; margin-top:6px;"></p>
-      <p class="precio" id="modalPrecio" style="font-size:20px; margin-top:10px; color:#556B2F; font-weight:bold;"></p>
+      <div class="modal-precio" id="modalPrecio"></div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab-btn activo" data-mpanel="mDesc" onclick="mostrarModalPanel('mDesc')" id="mtab-desc">Description</button>
+        <button class="modal-tab-btn" data-mpanel="mIngr" onclick="mostrarModalPanel('mIngr')" id="mtab-ingr">Ingredients</button>
+        <button class="modal-tab-btn" data-mpanel="mNutri" onclick="mostrarModalPanel('mNutri')" id="mtab-nutri">Nutrition</button>
+      </div>
+
+      <div class="modal-panel activo" id="mDesc"></div>
+      <div class="modal-panel" id="mIngr"></div>
+      <div class="modal-panel" id="mNutri">
+        <table class="nutri-table" id="nutriTable"></table>
+      </div>
+
       <a href="#" id="modalWhatsapp" class="btn-whatsapp" target="_blank"><span id="txt-askWa">🇬🇧 Ask on WhatsApp</span></a>
       <button class="btn-share-product" onclick="compartirProducto()" id="txt-shareProd">Share this product</button>
       <div class="btn-cerrar" onclick="cerrarModal()" id="txt-close">Close</div>
@@ -288,7 +312,12 @@ const T = {
     askWa: '🇬🇧 Ask on WhatsApp', shareProd: 'Share this product', close: 'Close',
     shareTitle: 'Kefify', shareText: 'Check out the Kefify catalog',
     copied: 'Link copied to clipboard!', productCopied: 'Product info copied to clipboard!',
-    askMsg: (name) => `Hi, I'm interested in this product: ${name}`
+    askMsg: (name) => `Hi, I'm interested in this product: ${name}`,
+    mTabDesc: 'Description', mTabIngr: 'Ingredients', mTabNutri: 'Nutrition',
+    noIngr: 'No ingredients listed.', noNutri: 'No nutrition information available.',
+    typicalValues: 'Typical values', per100g: 'per 100g',
+    nEnergyKJ: 'Energy kJ', nEnergyKcal: 'Energy kcal', nFat: 'Fat', nSat: 'of which saturates',
+    nCarbo: 'Carbohydrates', nSugar: 'of which sugars', nFibre: 'Fibre', nProtein: 'Protein', nSalt: 'Salt'
   },
   es: {
     subtitle: 'KEFIR | CULTIVOS BÚLGAROS | SALUDABLE',
@@ -317,7 +346,12 @@ const T = {
     askWa: '🇨🇴 Preguntar por WhatsApp', shareProd: 'Compartir producto', close: 'Cerrar',
     shareTitle: 'Kefify', shareText: 'Mira el catálogo de Kefify',
     copied: '¡Enlace copiado!', productCopied: '¡Información del producto copiada!',
-    askMsg: (name) => `Hola, me interesa este producto: ${name}`
+    askMsg: (name) => `Hola, me interesa este producto: ${name}`,
+    mTabDesc: 'Descripción', mTabIngr: 'Ingredientes', mTabNutri: 'Nutrición',
+    noIngr: 'No hay ingredientes listados.', noNutri: 'No hay información nutricional disponible.',
+    typicalValues: 'Valores típicos', per100g: 'por 100g',
+    nEnergyKJ: 'Energía kJ', nEnergyKcal: 'Energía kcal', nFat: 'Grasas', nSat: 'de las cuales saturadas',
+    nCarbo: 'Carbohidratos', nSugar: 'de los cuales azúcares', nFibre: 'Fibra', nProtein: 'Proteína', nSalt: 'Sal'
   }
 };
 
@@ -332,6 +366,13 @@ function mostrarPanel(id) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
   document.getElementById(id).classList.add('activo');
   document.querySelector(`.tab-btn[data-panel="${id}"]`).classList.add('activo');
+}
+
+function mostrarModalPanel(id) {
+  document.querySelectorAll('.modal-panel').forEach(p => p.classList.remove('activo'));
+  document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('activo'));
+  document.getElementById(id).classList.add('activo');
+  document.querySelector(`.modal-tab-btn[data-mpanel="${id}"]`).classList.add('activo');
 }
 
 function toggleLang() {
@@ -379,6 +420,9 @@ function applyTranslations() {
   document.getElementById('txt-askWa').textContent = t.askWa;
   document.getElementById('txt-shareProd').textContent = t.shareProd;
   document.getElementById('txt-close').textContent = t.close;
+  document.getElementById('mtab-desc').textContent = t.mTabDesc;
+  document.getElementById('mtab-ingr').textContent = t.mTabIngr;
+  document.getElementById('mtab-nutri').textContent = t.mTabNutri;
 }
 
 function parseFirestoreDoc(doc) {
@@ -389,15 +433,19 @@ function parseFirestoreDoc(doc) {
   const getArr = (k) => (f[k]?.arrayValue?.values || []).map(v => v.stringValue);
   return {
     id: doc.name.split('/').pop(),
-    nombre: getStr('nombre'),
+    nombre: getStr('nombre'), nombreEs: getStr('nombreEs'),
     categoria: getStr('categoria'),
-    sabor: getStr('sabor'),
-    presentacion: getStr('presentacion'),
+    sabor: getStr('sabor'), presentacion: getStr('presentacion'),
+    descripcion: getStr('descripcion'), descripcionEs: getStr('descripcionEs'),
+    ingredientes: getStr('ingredientes'), ingredientesEs: getStr('ingredientesEs'),
+    nutriEnergiaKJ: getStr('nutriEnergiaKJ'), nutriEnergiaKcal: getStr('nutriEnergiaKcal'),
+    nutriGrasa: getStr('nutriGrasa'), nutriGrasaSat: getStr('nutriGrasaSat'),
+    nutriCarbo: getStr('nutriCarbo'), nutriAzucar: getStr('nutriAzucar'),
+    nutriFibra: getStr('nutriFibra'), nutriProteina: getStr('nutriProteina'), nutriSal: getStr('nutriSal'),
     precioVenta: parseFloat(getNum('precioVenta')),
     precioVentaCOP: parseFloat(getNum('precioVentaCOP')),
     enStock: getBool('enStock'),
     fotos: getArr('fotos'),
-    descripcion: getStr('descripcion'),
   };
 }
 
@@ -440,11 +488,12 @@ function renderGrid() {
       const precioTxt = currentLang === 'es'
         ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
         : '£' + p.precioVenta.toFixed(0);
+      const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
       return `
       <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
-        <img src="${p.fotos[0] || ''}" alt="${p.nombre}" onerror="this.style.display='none'">
+        <img src="${p.fotos[0] || ''}" alt="${nombreMostrar}" onerror="this.style.display='none'">
         <div class="card-body">
-          <h3>${p.nombre}</h3>
+          <h3>${nombreMostrar}</h3>
           <div class="precio">${precioTxt}</div>
           <div class="stock">${p.enStock ? t.inStock : t.outStock}</div>
         </div>
@@ -457,20 +506,55 @@ function renderGrid() {
   grid.classList.add('transicionando');
 }
 
+function construirTablaNutricion(p, t) {
+  const filas = [
+    [t.nEnergyKJ, p.nutriEnergiaKJ],
+    [t.nEnergyKcal, p.nutriEnergiaKcal],
+    [t.nFat, p.nutriGrasa],
+    [t.nSat, p.nutriGrasaSat],
+    [t.nCarbo, p.nutriCarbo],
+    [t.nSugar, p.nutriAzucar],
+    [t.nFibre, p.nutriFibra],
+    [t.nProtein, p.nutriProteina],
+    [t.nSalt, p.nutriSal],
+  ].filter(f => f[1]);
+
+  if (filas.length === 0) return `<p style="color:#888;">${t.noNutri}</p>`;
+
+  let html = `<table class="nutri-table"><tr><td>${t.typicalValues}</td><td>${t.per100g}</td></tr>`;
+  filas.forEach(f => {
+    html += `<tr><td>${f[0]}</td><td>${f[1]}</td></tr>`;
+  });
+  html += '</table>';
+  return html;
+}
+
 function abrirModal(index) {
   const t = T[currentLang];
   const numero = NUMEROS[currentLang];
   const p = productos[index];
   productoActual = p;
   document.getElementById('modalImg').src = p.fotos[0] || '';
-  document.getElementById('modalNombre').textContent = p.nombre;
-  document.getElementById('modalDesc').textContent =
-    [p.sabor, p.presentacion, p.descripcion].filter(Boolean).join(' | ');
+  const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
+  const descripcionMostrar = currentLang === 'es' && p.descripcionEs ? p.descripcionEs : p.descripcion;
+  const ingredientesMostrar = currentLang === 'es' && p.ingredientesEs ? p.ingredientesEs : p.ingredientes;
+
+  document.getElementById('modalNombre').textContent = nombreMostrar;
   const precioTxt = currentLang === 'es'
     ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
     : '£' + p.precioVenta.toFixed(0);
   document.getElementById('modalPrecio').textContent = precioTxt;
-  const mensaje = encodeURIComponent(t.askMsg(p.nombre));
+
+  document.getElementById('mDesc').textContent =
+    [p.sabor, p.presentacion, descripcionMostrar].filter(Boolean).join(' | ');
+  document.getElementById('mIngr').textContent = ingredientesMostrar || t.noIngr;
+  document.getElementById('nutriTable').outerHTML = construirTablaNutricion(p, t).includes('<table')
+    ? construirTablaNutricion(p, t)
+    : `<div id="nutriTable">${construirTablaNutricion(p, t)}</div>`;
+
+  mostrarModalPanel('mDesc');
+
+  const mensaje = encodeURIComponent(t.askMsg(nombreMostrar));
   document.getElementById('modalWhatsapp').href = `https://wa.me/${numero}?text=${mensaje}`;
   document.getElementById('modal').classList.add('abierto');
 }
@@ -495,10 +579,11 @@ async function compartirProducto() {
   const precioTxt = currentLang === 'es'
     ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
     : '£' + p.precioVenta.toFixed(0);
-  const shareData = { title: p.nombre, text: `${p.nombre} - ${precioTxt}`, url: SITE_URL };
+  const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
+  const shareData = { title: nombreMostrar, text: `${nombreMostrar} - ${precioTxt}`, url: SITE_URL };
   try {
     if (navigator.share) { await navigator.share(shareData); }
-    else { await navigator.clipboard.writeText(`${p.nombre} - ${precioTxt} - ${SITE_URL}`); alert(t.productCopied); }
+    else { await navigator.clipboard.writeText(`${nombreMostrar} - ${precioTxt} - ${SITE_URL}`); alert(t.productCopied); }
   } catch (e) {}
 }
 
