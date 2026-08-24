@@ -27,6 +27,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   final _precioCtrl = TextEditingController();
   final _precioCOPCtrl = TextEditingController();
   final _saborCtrl = TextEditingController();
+  final _saborEsCtrl = TextEditingController();
   final _presentacionCtrl = TextEditingController();
   final _descripcionCtrl = TextEditingController();
   final _descripcionEsCtrl = TextEditingController();
@@ -48,6 +49,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   final _nombreFocus = FocusNode();
   final _descripcionFocus = FocusNode();
   final _ingredientesFocus = FocusNode();
+  final _saborFocus = FocusNode();
 
   String _categoria = AppConfig.categorias.first;
   bool _enStock = true;
@@ -55,6 +57,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   bool _traduciendoNombre = false;
   bool _traduciendoDesc = false;
   bool _traduciendoIngr = false;
+  bool _traduciendoSabor = false;
   List<String> _fotosExistentes = [];
   List<File> _fotosNuevas = [];
 
@@ -70,6 +73,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       _precioCtrl.text = p.precioVenta.toString();
       _precioCOPCtrl.text = p.precioVentaCOP.toString();
       _saborCtrl.text = p.sabor;
+      _saborEsCtrl.text = p.saborEs;
       _presentacionCtrl.text = p.presentacion;
       _descripcionCtrl.text = p.descripcion;
       _descripcionEsCtrl.text = p.descripcionEs;
@@ -104,6 +108,11 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     _ingredientesFocus.addListener(() {
       if (!_ingredientesFocus.hasFocus) {
         _autoTraducir(_ingredientesCtrl, _ingredientesEsCtrl, (v) => setState(() => _traduciendoIngr = v));
+      }
+    });
+    _saborFocus.addListener(() {
+      if (!_saborFocus.hasFocus) {
+        _autoTraducir(_saborCtrl, _saborEsCtrl, (v) => setState(() => _traduciendoSabor = v));
       }
     });
   }
@@ -160,6 +169,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       codigo: _codigoCtrl.text.trim(),
       categoria: _categoria,
       sabor: _saborCtrl.text.trim(),
+      saborEs: _saborEsCtrl.text.trim(),
       presentacion: _presentacionCtrl.text.trim(),
       descripcion: _descripcionCtrl.text.trim(),
       descripcionEs: _descripcionEsCtrl.text.trim(),
@@ -316,7 +326,21 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   const SizedBox(height: 12),
                   TextField(
                     controller: _saborCtrl,
-                    decoration: const InputDecoration(labelText: 'Sabor', border: OutlineInputBorder()),
+                    focusNode: _saborFocus,
+                    decoration: const InputDecoration(labelText: 'Sabor (Inglés)', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _saborEsCtrl,
+                    decoration: InputDecoration(
+                      labelText: 'Sabor (Español)',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: _traduciendoSabor
+                          ? const Padding(
+                              padding: EdgeInsets.all(12),
+                              child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)))
+                          : null,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
