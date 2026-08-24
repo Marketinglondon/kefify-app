@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../config.dart';
@@ -19,6 +21,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   static const Color oliveGreen = Color(0xFF556B2F);
 
   final _nombreCtrl = TextEditingController();
+  final _nombreEsCtrl = TextEditingController();
   final _codigoCtrl = TextEditingController();
   final _costoCtrl = TextEditingController();
   final _precioCtrl = TextEditingController();
@@ -26,12 +29,32 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   final _saborCtrl = TextEditingController();
   final _presentacionCtrl = TextEditingController();
   final _descripcionCtrl = TextEditingController();
+  final _descripcionEsCtrl = TextEditingController();
+  final _ingredientesCtrl = TextEditingController();
+  final _ingredientesEsCtrl = TextEditingController();
   final _proveedorNombreCtrl = TextEditingController();
   final _proveedorWhatsappCtrl = TextEditingController();
+
+  final _nutriEnergiaKJCtrl = TextEditingController();
+  final _nutriEnergiaKcalCtrl = TextEditingController();
+  final _nutriGrasaCtrl = TextEditingController();
+  final _nutriGrasaSatCtrl = TextEditingController();
+  final _nutriCarboCtrl = TextEditingController();
+  final _nutriAzucarCtrl = TextEditingController();
+  final _nutriFibraCtrl = TextEditingController();
+  final _nutriProteinaCtrl = TextEditingController();
+  final _nutriSalCtrl = TextEditingController();
+
+  final _nombreFocus = FocusNode();
+  final _descripcionFocus = FocusNode();
+  final _ingredientesFocus = FocusNode();
 
   String _categoria = AppConfig.categorias.first;
   bool _enStock = true;
   bool _guardando = false;
+  bool _traduciendoNombre = false;
+  bool _traduciendoDesc = false;
+  bool _traduciendoIngr = false;
   List<String> _fotosExistentes = [];
   List<File> _fotosNuevas = [];
 
@@ -41,6 +64,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     final p = widget.producto;
     if (p != null) {
       _nombreCtrl.text = p.nombre;
+      _nombreEsCtrl.text = p.nombreEs;
       _codigoCtrl.text = p.codigo;
       _costoCtrl.text = p.costoProveedor.toString();
       _precioCtrl.text = p.precioVenta.toString();
@@ -48,12 +72,58 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       _saborCtrl.text = p.sabor;
       _presentacionCtrl.text = p.presentacion;
       _descripcionCtrl.text = p.descripcion;
+      _descripcionEsCtrl.text = p.descripcionEs;
+      _ingredientesCtrl.text = p.ingredientes;
+      _ingredientesEsCtrl.text = p.ingredientesEs;
+      _nutriEnergiaKJCtrl.text = p.nutriEnergiaKJ;
+      _nutriEnergiaKcalCtrl.text = p.nutriEnergiaKcal;
+      _nutriGrasaCtrl.text = p.nutriGrasa;
+      _nutriGrasaSatCtrl.text = p.nutriGrasaSat;
+      _nutriCarboCtrl.text = p.nutriCarbo;
+      _nutriAzucarCtrl.text = p.nutriAzucar;
+      _nutriFibraCtrl.text = p.nutriFibra;
+      _nutriProteinaCtrl.text = p.nutriProteina;
+      _nutriSalCtrl.text = p.nutriSal;
       _proveedorNombreCtrl.text = p.proveedorNombre;
       _proveedorWhatsappCtrl.text = p.proveedorWhatsapp;
       _categoria = p.categoria;
       _enStock = p.enStock;
       _fotosExistentes = List.from(p.fotos);
     }
+
+    _nombreFocus.addListener(() {
+      if (!_nombreFocus.hasFocus) {
+        _autoTraducir(_nombreCtrl, _nombreEsCtrl, (v) => setState(() => _traduciendoNombre = v));
+      }
+    });
+    _descripcionFocus.addListener(() {
+      if (!_descripcionFocus.hasFocus) {
+        _autoTraducir(_descripcionCtrl, _descripcionEsCtrl, (v) => setState(() => _traduciendoDesc = v));
+      }
+    });
+    _ingredientesFocus.addListener(() {
+      if (!_ingredientesFocus.hasFocus) {
+        _autoTraducir(_ingredientesCtrl, _ingredientesEsCtrl, (v) => setState(() => _traduciendoIngr = v));
+      }
+    });
+  }
+
+  Future<void> _autoTraducir(TextEditingController origen, TextEditingController destino,
+      void Function(bool) setLoading) async {
+    final texto = origen.text.trim();
+    if (texto.isEmpty || destino.text.trim().isNotEmpty) return;
+    setLoading(true);
+    try {
+      final url = Uri.parse(
+          'https://api.mymemory.translated.net/get?q=${Uri.encodeComponent(texto)}&langpair=en|es');
+      final res = await http.get(url);
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        final traducido = data['responseData']?['translatedText'];
+        if (traducido != null && mounted) destino.text = traducido;
+      }
+    } catch (e) {}
+    setLoading(false);
   }
 
   Future<void> _elegirFotos() async {
@@ -86,10 +156,24 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     final producto = Producto(
       id: widget.producto?.id ?? const Uuid().v4(),
       nombre: _nombreCtrl.text.trim(),
+      nombreEs: _nombreEsCtrl.text.trim(),
       codigo: _codigoCtrl.text.trim(),
       categoria: _categoria,
       sabor: _saborCtrl.text.trim(),
       presentacion: _presentacionCtrl.text.trim(),
+      descripcion: _descripcionCtrl.text.trim(),
+      descripcionEs: _descripcionEsCtrl.text.trim(),
+      ingredientes: _ingredientesCtrl.text.trim(),
+      ingredientesEs: _ingredientesEsCtrl.text.trim(),
+      nutriEnergiaKJ: _nutriEnergiaKJCtrl.text.trim(),
+      nutriEnergiaKcal: _nutriEnergiaKcalCtrl.text.trim(),
+      nutriGrasa: _nutriGrasaCtrl.text.trim(),
+      nutriGrasaSat: _nutriGrasaSatCtrl.text.trim(),
+      nutriCarbo: _nutriCarboCtrl.text.trim(),
+      nutriAzucar: _nutriAzucarCtrl.text.trim(),
+      nutriFibra: _nutriFibraCtrl.text.trim(),
+      nutriProteina: _nutriProteinaCtrl.text.trim(),
+      nutriSal: _nutriSalCtrl.text.trim(),
       costoProveedor: double.tryParse(_costoCtrl.text) ?? 0,
       precioVenta: double.tryParse(_precioCtrl.text) ?? 0,
       precioVentaCOP: double.tryParse(_precioCOPCtrl.text) ?? 0,
@@ -97,7 +181,6 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       fotos: todasLasFotos,
       proveedorNombre: _proveedorNombreCtrl.text.trim(),
       proveedorWhatsapp: _proveedorWhatsappCtrl.text.trim(),
-      descripcion: _descripcionCtrl.text.trim(),
       fechaCreacion: widget.producto?.fechaCreacion,
     );
 
@@ -130,6 +213,21 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       await FirestoreService.eliminarProducto(widget.producto!.id);
       if (mounted) Navigator.pop(context);
     }
+  }
+
+  Widget _campoNutri(String label, TextEditingController ctrl, {String? hint}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: TextField(
+        controller: ctrl,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          border: const OutlineInputBorder(),
+          isDense: true,
+        ),
+      ),
+    );
   }
 
   @override
@@ -185,7 +283,21 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                   const SizedBox(height: 20),
                   TextField(
                     controller: _nombreCtrl,
-                    decoration: const InputDecoration(labelText: 'Nombre del producto', border: OutlineInputBorder()),
+                    focusNode: _nombreFocus,
+                    decoration: const InputDecoration(labelText: 'Nombre (Inglés)', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _nombreEsCtrl,
+                    decoration: InputDecoration(
+                      labelText: 'Nombre (Español)',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: _traduciendoNombre
+                          ? const Padding(
+                              padding: EdgeInsets.all(12),
+                              child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)))
+                          : null,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -211,13 +323,70 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                     controller: _presentacionCtrl,
                     decoration: const InputDecoration(labelText: 'Presentacion (ej. 500ml)', border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 20),
+
+                  const Divider(),
+                  const Text('Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _descripcionCtrl,
+                    focusNode: _descripcionFocus,
                     maxLines: 3,
-                    decoration: const InputDecoration(labelText: 'Descripcion', border: OutlineInputBorder()),
+                    decoration: const InputDecoration(labelText: 'Descripcion (Inglés)', border: OutlineInputBorder()),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _descripcionEsCtrl,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Descripcion (Español)',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: _traduciendoDesc
+                          ? const Padding(
+                              padding: EdgeInsets.all(12),
+                              child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)))
+                          : null,
+                    ),
+                  ),
+
+                  const Divider(height: 32),
+                  const Text('Ingredients', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _ingredientesCtrl,
+                    focusNode: _ingredientesFocus,
+                    maxLines: 3,
+                    decoration: const InputDecoration(labelText: 'Ingredientes (Inglés)', border: OutlineInputBorder()),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _ingredientesEsCtrl,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Ingredientes (Español)',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: _traduciendoIngr
+                          ? const Padding(
+                              padding: EdgeInsets.all(12),
+                              child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)))
+                          : null,
+                    ),
+                  ),
+
+                  const Divider(height: 32),
+                  const Text('Nutrition (per 100g)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 8),
+                  _campoNutri('Energy kJ', _nutriEnergiaKJCtrl, hint: 'ej. 242'),
+                  _campoNutri('Energy kcal', _nutriEnergiaKcalCtrl, hint: 'ej. 58'),
+                  _campoNutri('Fat', _nutriGrasaCtrl, hint: 'ej. 3.0g'),
+                  _campoNutri('of which saturates', _nutriGrasaSatCtrl, hint: 'ej. 1.9g'),
+                  _campoNutri('Carbohydrates', _nutriCarboCtrl, hint: 'ej. 4.4g'),
+                  _campoNutri('of which sugars', _nutriAzucarCtrl, hint: 'ej. 3.7g'),
+                  _campoNutri('Fibre', _nutriFibraCtrl, hint: 'ej. <0.5g'),
+                  _campoNutri('Protein', _nutriProteinaCtrl, hint: 'ej. 3.3g'),
+                  _campoNutri('Salt', _nutriSalCtrl, hint: 'ej. 0.10g'),
+
+                  const Divider(height: 32),
                   TextField(
                     controller: _costoCtrl,
                     keyboardType: TextInputType.number,
