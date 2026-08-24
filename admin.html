@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kefify - Admin</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, sans-serif; background: #f4f9f7; color: #1a1a1a; padding-bottom: 40px; }
@@ -158,6 +160,13 @@
 </div>
 
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAJ1z4uI5ngMtagQWtEljdWl05ufutPBsO",
+  authDomain: "kefify-86360.firebaseapp.com",
+  projectId: "kefify-86360"
+};
+firebase.initializeApp(firebaseConfig);
+
 const CODIGO_ACCESO = 'kefify2026';
 const PROJECT_ID = 'kefify-86360';
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/productos`;
@@ -171,12 +180,17 @@ let fotosSubidas = [];
 let editandoId = null;
 let productosCache = [];
 
-function verificarCodigo() {
+async function verificarCodigo() {
   const val = document.getElementById('codigoAcceso').value;
   if (val === CODIGO_ACCESO) {
-    document.getElementById('loginBox').style.display = 'none';
-    document.getElementById('panel').style.display = 'block';
-    cargarLista();
+    try {
+      await firebase.auth().signInAnonymously();
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      cargarLista();
+    } catch (e) {
+      alert('Error al iniciar sesión. Intenta de nuevo.');
+    }
   } else {
     alert('Código incorrecto');
   }
@@ -274,6 +288,13 @@ function fromFirestoreDoc(doc) {
   return obj;
 }
 
+async function obtenerHeaders() {
+  const user = firebase.auth().currentUser;
+  if (!user) return {};
+  const token = await user.getIdToken();
+  return { 'Authorization': `Bearer ${token}` };
+}
+
 async function guardarProducto() {
   const estado = document.getElementById('estado');
   const nombre = document.getElementById('nombre').value.trim();
@@ -293,11 +314,12 @@ async function guardarProducto() {
   estado.textContent = 'Guardando...';
   try {
     const fields = toFirestoreFields(datos);
+    const authHeaders = await obtenerHeaders();
     if (editandoId) {
       const mask = Object.keys(datos).map(k => `updateMask.fieldPaths=${k}`).join('&');
       const res = await fetch(`${FIRESTORE_URL}/${editandoId}?${mask}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({ fields })
       });
       if (!res.ok) throw new Error();
@@ -305,7 +327,7 @@ async function guardarProducto() {
     } else {
       const res = await fetch(FIRESTORE_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({ fields })
       });
       if (!res.ok) throw new Error();
@@ -378,7 +400,8 @@ function editarProducto(id) {
 async function eliminarProducto(id) {
   if (!confirm('¿Eliminar este producto?')) return;
   try {
-    await fetch(`${FIRESTORE_URL}/${id}`, { method: 'DELETE' });
+    const authHeaders = await obtenerHeaders();
+    await fetch(`${FIRESTORE_URL}/${id}`, { method: 'DELETE', headers: authHeaders });
     cargarLista();
   } catch (e) {
     alert('Error al eliminar');
@@ -401,6 +424,7 @@ async function traducirTodos() {
 
   let actualizados = 0;
   let revisados = 0;
+  const authHeaders = await obtenerHeaders();
 
   for (const p of productosCache) {
     revisados++;
@@ -426,7 +450,7 @@ async function traducirTodos() {
         const mask = Object.keys(cambios).map(k => `updateMask.fieldPaths=${k}`).join('&');
         await fetch(`${FIRESTORE_URL}/${p.id}?${mask}`, {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
           body: JSON.stringify({ fields })
         });
         actualizados++;
