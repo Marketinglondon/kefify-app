@@ -94,6 +94,8 @@
   .btn-cerrar { display: block; text-align: center; padding: 10px; color: #888; cursor: pointer; }
 
   #splash { position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.8s; padding: 24px; text-align: center; }
+  #splashLangRow { position: absolute; top: 20px; right: 20px; }
+  #btnLangSplash { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 12px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; font-weight: bold; }
   #splash img { width: 200px; margin-bottom: 30px; animation: pulse 3.2s ease-in-out infinite; }
   @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } }
   #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 14px; font-weight: bold; letter-spacing: 0.5px; cursor: pointer; line-height: 1.6; }
@@ -111,8 +113,11 @@
 <body>
 
 <div id="splash">
+  <div id="splashLangRow">
+    <button id="btnLangSplash" onclick="toggleLang()">🇪🇸 ES</button>
+  </div>
   <img src="assets/icon/Icon.png" alt="Kefify">
-  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance<br>Descubre tu equilibrio</button>
+  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance</button>
 </div>
 
 <header>
@@ -289,6 +294,7 @@ const T = {
     subtitle: 'KEFIR | BULGARIAN CULTURES | HEALTHY',
     share: 'Share',
     location: '🇬🇧 London - England',
+    splashBtn: 'Discover your balance',
     tabBenefits: 'Benefits', tabProducts: 'Products', tabAbout: 'About', tabRecipes: 'Recipes', tabContact: 'Contact',
     benefitsTitle: 'Benefits', benefitsSub: 'Why kefir is good for you',
     b1t: 'Probiotics', b1d: 'Rich in live cultures that support a healthy gut microbiome.',
@@ -323,6 +329,7 @@ const T = {
     subtitle: 'KEFIR | CULTIVOS BÚLGAROS | SALUDABLE',
     share: 'Compartir',
     location: '🇨🇴 Palmira - Colombia',
+    splashBtn: 'Descubre tu equilibrio',
     tabBenefits: 'Beneficios', tabProducts: 'Productos', tabAbout: 'Nosotros', tabRecipes: 'Recetas', tabContact: 'Contacto',
     benefitsTitle: 'Beneficios', benefitsSub: 'Por qué el kéfir es bueno para ti',
     b1t: 'Probióticos', b1d: 'Rico en cultivos vivos que apoyan un microbioma intestinal saludable.',
@@ -386,7 +393,10 @@ function toggleLang() {
 function applyTranslations() {
   const t = T[currentLang];
   const numero = NUMEROS[currentLang];
-  document.getElementById('btnLang').textContent = currentLang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
+  const langLabel = currentLang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
+  document.getElementById('btnLang').textContent = langLabel;
+  document.getElementById('btnLangSplash').textContent = langLabel;
+  document.getElementById('btnEntrar').textContent = t.splashBtn;
   document.getElementById('txt-subtitle').textContent = t.subtitle;
   document.getElementById('locationBanner').textContent = t.location;
   document.getElementById('txt-share').textContent = t.share;
