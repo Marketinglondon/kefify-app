@@ -149,6 +149,8 @@
 
   <div class="card">
     <h3>Productos existentes</h3>
+    <button class="btn-secondary" style="width:100%; margin-bottom:12px;" onclick="traducirTodos()">🔁 Traducir todos los productos</button>
+    <div class="estado" id="estadoTraduccion"></div>
     <div id="listaProductos"></div>
   </div>
 
@@ -381,6 +383,59 @@ async function eliminarProducto(id) {
   } catch (e) {
     alert('Error al eliminar');
   }
+}
+
+async function traducirTodos() {
+  const estado = document.getElementById('estadoTraduccion');
+  if (productosCache.length === 0) {
+    estado.textContent = 'No hay productos cargados. Espera a que termine de cargar la lista.';
+    return;
+  }
+
+  const camposATraducir = [
+    ['nombre', 'nombreEs'],
+    ['descripcion', 'descripcionEs'],
+    ['ingredientes', 'ingredientesEs'],
+    ['sabor', 'saborEs']
+  ];
+
+  let actualizados = 0;
+  let revisados = 0;
+
+  for (const p of productosCache) {
+    revisados++;
+    estado.textContent = `Revisando ${revisados} de ${productosCache.length}...`;
+    const cambios = {};
+    let necesitaGuardar = false;
+
+    for (const [origen, destino] of camposATraducir) {
+      const textoOrigen = (p[origen] || '').trim();
+      const textoDestino = (p[destino] || '').trim();
+      if (textoOrigen && !textoDestino) {
+        const traducido = await traducirTexto(textoOrigen);
+        if (traducido) {
+          cambios[destino] = traducido;
+          necesitaGuardar = true;
+        }
+      }
+    }
+
+    if (necesitaGuardar) {
+      try {
+        const fields = toFirestoreFields(cambios);
+        const mask = Object.keys(cambios).map(k => `updateMask.fieldPaths=${k}`).join('&');
+        await fetch(`${FIRESTORE_URL}/${p.id}?${mask}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields })
+        });
+        actualizados++;
+      } catch (e) {}
+    }
+  }
+
+  estado.textContent = `Listo. ${actualizados} producto(s) actualizado(s) con traducciones.`;
+  cargarLista();
 }
 </script>
 </body>
