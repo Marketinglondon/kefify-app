@@ -435,7 +435,7 @@ function parseFirestoreDoc(doc) {
     id: doc.name.split('/').pop(),
     nombre: getStr('nombre'), nombreEs: getStr('nombreEs'),
     categoria: getStr('categoria'),
-    sabor: getStr('sabor'), presentacion: getStr('presentacion'),
+    sabor: getStr('sabor'), saborEs: getStr('saborEs'), presentacion: getStr('presentacion'),
     descripcion: getStr('descripcion'), descripcionEs: getStr('descripcionEs'),
     ingredientes: getStr('ingredientes'), ingredientesEs: getStr('ingredientesEs'),
     nutriEnergiaKJ: getStr('nutriEnergiaKJ'), nutriEnergiaKcal: getStr('nutriEnergiaKcal'),
@@ -538,6 +538,7 @@ function abrirModal(index) {
   const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
   const descripcionMostrar = currentLang === 'es' && p.descripcionEs ? p.descripcionEs : p.descripcion;
   const ingredientesMostrar = currentLang === 'es' && p.ingredientesEs ? p.ingredientesEs : p.ingredientes;
+  const saborMostrar = currentLang === 'es' && p.saborEs ? p.saborEs : p.sabor;
 
   document.getElementById('modalNombre').textContent = nombreMostrar;
   const precioTxt = currentLang === 'es'
@@ -546,7 +547,7 @@ function abrirModal(index) {
   document.getElementById('modalPrecio').textContent = precioTxt;
 
   document.getElementById('mDesc').textContent =
-    [p.sabor, p.presentacion, descripcionMostrar].filter(Boolean).join(' | ');
+    [saborMostrar, p.presentacion, descripcionMostrar].filter(Boolean).join(' | ');
   document.getElementById('mIngr').textContent = ingredientesMostrar || t.noIngr;
 
   const nutriHtml = construirTablaNutricion(p, t);
