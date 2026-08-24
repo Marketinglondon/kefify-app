@@ -5,6 +5,7 @@ class Producto {
   String codigo;
   String categoria;
   String sabor;
+  String saborEs;
   String presentacion;
   String descripcion;
   String descripcionEs;
@@ -35,6 +36,7 @@ class Producto {
     this.codigo = '',
     required this.categoria,
     this.sabor = '',
+    this.saborEs = '',
     this.presentacion = '',
     this.descripcion = '',
     this.descripcionEs = '',
@@ -66,6 +68,7 @@ class Producto {
       'codigo': codigo,
       'categoria': categoria,
       'sabor': sabor,
+      'saborEs': saborEs,
       'presentacion': presentacion,
       'descripcion': descripcion,
       'descripcionEs': descripcionEs,
@@ -99,6 +102,7 @@ class Producto {
       codigo: map['codigo'] ?? '',
       categoria: map['categoria'] ?? '',
       sabor: map['sabor'] ?? '',
+      saborEs: map['saborEs'] ?? '',
       presentacion: map['presentacion'] ?? '',
       descripcion: map['descripcion'] ?? '',
       descripcionEs: map['descripcionEs'] ?? '',
