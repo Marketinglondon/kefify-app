@@ -1,607 +1,467 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kefify - Kefir, Bulgarian Cultures, Healthy</title>
-<meta property="og:title" content="Kefify">
-<meta property="og:description" content="Kefify catalog: kefir drinks, ice cream, desserts, cheese and butter">
-<meta property="og:image" content="https://kefify.co.uk/assets/icon/Icon.png">
-<meta property="og:type" content="website">
-<link rel="icon" href="assets/icon/Icon.png">
+<title>Kefify - Admin</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, sans-serif; background: #f4f9f7; color: #1a1a1a; }
-
-  header { background: white; color: black; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #eee; }
-  .header-inner { max-width: 1100px; margin: 0 auto; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  header img { width: 44px; height: 44px; }
-  header .titulos { text-align: left; }
-  header h1 { font-size: 22px; letter-spacing: 1px; color: #000; }
-  header p { font-size: 12px; color: #333; margin-top: 2px; }
-  .header-right { display: flex; align-items: center; gap: 8px; }
-  .btn-lang { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 12px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; font-weight: bold; }
-  .btn-share-page { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 14px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; }
-
-  .hero { width: 100%; overflow: hidden; }
-  .hero img { width: 100%; height: auto; display: block; max-height: 420px; object-fit: cover; object-position: center; }
-  .location-banner { text-align: center; background: white; padding: 10px 16px; font-size: 14px; font-weight: bold; color: #556B2F; border-bottom: 1px solid #eee; }
-
-  .top-tabs { display: flex; background: white; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 20; }
-  .tab-btn { flex: 1; background: none; border: none; padding: 10px 4px 8px 4px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; color: #888; font-size: 10px; border-bottom: 3px solid transparent; }
-  .tab-btn svg { width: 20px; height: 20px; stroke: #888; fill: none; stroke-width: 2; }
-  .tab-btn.activo { color: #556B2F; border-bottom-color: #556B2F; background: #f0f4e8; }
-  .tab-btn.activo svg { stroke: #556B2F; }
-
-  .panel { display: none; max-width: 1100px; margin: 0 auto; padding: 24px 16px 40px 16px; }
-  .panel.activo { display: block; }
-  .panel h2 { font-size: 22px; margin-bottom: 6px; }
-  .panel .subtitle { font-size: 13px; color: #666; margin-bottom: 20px; }
-
-  .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
-  .benefit-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
-  .benefit-card .icon { font-size: 28px; margin-bottom: 8px; }
-  .benefit-card h3 { font-size: 14px; margin-bottom: 6px; color: #556B2F; }
-  .benefit-card p { font-size: 12px; color: #666; line-height: 1.4; }
-
-  .filtros { display: flex; gap: 8px; padding: 0 0 16px 0; overflow-x: auto; }
-  .filtro-btn { padding: 8px 14px; border-radius: 20px; border: 1px solid #556B2F; background: white; color: #556B2F; white-space: nowrap; font-size: 13px; cursor: pointer; }
-  .filtro-btn.activo { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border-color: #556B2F; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
-  .grid.transicionando { animation: fadeSlide 0.35s ease; }
-  @keyframes fadeSlide { 0% { opacity: 0; transform: translateX(20px); } 100% { opacity: 1; transform: translateX(0); } }
-  .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); cursor: pointer; }
-  .card img { width: 100%; height: 140px; object-fit: cover; }
-  .card-body { padding: 10px; }
-  .card-body h3 { font-size: 14px; margin-bottom: 4px; color: #1a1a1a; }
-  .card-body .precio { color: #556B2F; font-weight: bold; font-size: 16px; }
-  .card-body .stock { font-size: 11px; color: #888; margin-top: 4px; }
-  .vacio { text-align: center; padding: 40px; color: #888; grid-column: 1 / -1; }
-
-  .about-box { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-  .about-box p { font-size: 14px; color: #444; line-height: 1.7; margin-bottom: 12px; }
-
-  .recipes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-  .recipe-card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-  .recipe-card h3 { font-size: 15px; color: #556B2F; margin-bottom: 8px; }
-  .recipe-card p { font-size: 13px; color: #666; line-height: 1.5; }
-
-  .contact-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); text-align: center; }
-  .contact-box p { font-size: 14px; color: #444; margin-bottom: 18px; }
-  .btn-contact-whatsapp { display: inline-block; background: #25D366; color: white; padding: 12px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 14px; }
-
-  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
-  .modal.abierto { display: flex; }
-  .modal-content { background: white; border-radius: 12px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; }
-  .modal-content img { width: 100%; max-height: 320px; object-fit: contain; background: #f4f9f7; }
-  .modal-body { padding: 16px; }
-  .modal-body h2 { margin-bottom: 8px; }
-  .modal-precio { font-size: 20px; margin: 10px 0; color: #556B2F; font-weight: bold; }
-
-  .modal-tabs { display: flex; border-bottom: 1px solid #eee; margin-top: 12px; }
-  .modal-tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; font-size: 12px; color: #888; border-bottom: 2px solid transparent; cursor: pointer; }
-  .modal-tab-btn.activo { color: #556B2F; font-weight: bold; border-bottom-color: #556B2F; }
-  .modal-panel { display: none; padding: 14px 2px; font-size: 13px; color: #444; line-height: 1.6; }
-  .modal-panel.activo { display: block; }
-  .nutri-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .nutri-table td { padding: 6px 4px; border-bottom: 1px solid #eee; }
-  .nutri-table tr:first-child td { font-weight: bold; background: #f4f9f7; }
-  .nutri-table td:last-child { text-align: right; }
-
-  .btn-whatsapp { display: block; background: #25D366; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; margin-top: 12px; font-weight: bold; }
-  .btn-share-product { display: block; background: white; color: #556B2F; text-align: center; padding: 12px; border-radius: 8px; border: 1px solid #556B2F; margin-top: 10px; font-weight: bold; cursor: pointer; width: 100%; }
-  .btn-cerrar { display: block; text-align: center; padding: 10px; color: #888; cursor: pointer; }
-
-  #splash { position: fixed; inset: 0; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity 0.8s; padding: 24px; text-align: center; }
-  #splashLangRow { position: absolute; top: 20px; right: 20px; }
-  #btnLangSplash { background: none; border: 1px solid #556B2F; color: #556B2F; padding: 8px 12px; border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer; font-weight: bold; }
-  #splash img { width: 200px; margin-bottom: 30px; animation: pulse 3.2s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.04); } }
-  #btnEntrar { background: linear-gradient(135deg, #556B2F, #8A9A5B); color: white; border: none; padding: 14px 32px; border-radius: 30px; font-size: 14px; font-weight: bold; letter-spacing: 0.5px; cursor: pointer; line-height: 1.6; }
-
-  @media (min-width: 700px) {
-    .grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
-    header { padding: 20px 24px; }
-    .tab-btn span { font-size: 12px; }
-  }
-  @media (min-width: 1100px) {
-    .grid { grid-template-columns: repeat(5, 1fr); }
-  }
+  body { font-family: -apple-system, sans-serif; background: #f4f9f7; color: #1a1a1a; padding-bottom: 40px; }
+  header { background: #556B2F; color: white; padding: 16px; text-align: center; }
+  header h1 { font-size: 20px; }
+  .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+  .card { background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+  label { display: block; font-size: 13px; color: #555; margin-bottom: 4px; margin-top: 12px; }
+  input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; }
+  textarea { resize: vertical; min-height: 60px; }
+  .row { display: flex; gap: 10px; }
+  .row > div { flex: 1; }
+  .switch-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  button { cursor: pointer; }
+  .btn-primary { width: 100%; background: #556B2F; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 18px; }
+  .btn-secondary { background: white; color: #556B2F; border: 1px solid #556B2F; padding: 8px 14px; border-radius: 8px; font-size: 13px; }
+  .fotos-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .fotos-preview img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; }
+  .lista-item { background: white; border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .lista-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; }
+  .lista-item .info { flex: 1; }
+  .lista-item .info h4 { font-size: 14px; }
+  .lista-item .info p { font-size: 12px; color: #888; }
+  .lista-item .acciones { display: flex; gap: 6px; }
+  .lista-item button { border: none; background: #eee; padding: 6px 10px; border-radius: 6px; font-size: 12px; }
+  .estado { text-align: center; padding: 10px; font-size: 13px; color: #556B2F; }
+  #loginBox { max-width: 320px; margin: 80px auto; text-align: center; }
+  #loginBox input { margin-top: 12px; }
+  #loginBox button { margin-top: 14px; }
+  .spinner-mini { display: inline-block; width: 12px; height: 12px; border: 2px solid #ccc; border-top-color: #556B2F; border-radius: 50%; animation: girar 0.7s linear infinite; margin-left: 6px; vertical-align: middle; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  .idioma-tag { display: inline-block; font-size: 11px; background: #f0f4e8; color: #556B2F; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
+  .seccion-titulo { font-size: 15px; font-weight: bold; color: #556B2F; margin-top: 20px; border-top: 1px solid #eee; padding-top: 14px; }
+  .nutri-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 </style>
 </head>
 <body>
 
-<div id="splash">
-  <div id="splashLangRow">
-    <button id="btnLangSplash" onclick="toggleLang()">🇪🇸 ES</button>
-  </div>
-  <img src="assets/icon/Icon.png" alt="Kefify">
-  <button id="btnEntrar" onclick="entrarCatalogo()">Discover your balance</button>
+<div id="loginBox">
+  <h2>Kefify Admin</h2>
+  <p style="margin-top:8px; font-size:13px; color:#666;">Ingresa el código de acceso</p>
+  <input type="password" id="codigoAcceso" placeholder="Código">
+  <button class="btn-primary" onclick="verificarCodigo()">Entrar</button>
 </div>
 
-<header>
-  <div class="header-inner">
-    <div class="header-left">
-      <img src="assets/icon/Logo.png" alt="Kefify">
-      <div class="titulos">
-        <h1>KEFIFY</h1>
-        <p id="txt-subtitle">KEFIR | BULGARIAN CULTURES | HEALTHY</p>
+<div id="panel" style="display:none;">
+<header><h1>Kefify - Administrar productos</h1></header>
+<div class="container">
+
+  <div class="card">
+    <h3 id="formTitulo">Nuevo producto</h3>
+    <input type="hidden" id="productoId">
+
+    <label>Fotos</label>
+    <input type="file" id="fotosInput" accept="image/*" multiple>
+    <div class="fotos-preview" id="fotosPreview"></div>
+
+    <label>Nombre <span class="idioma-tag">Inglés</span></label>
+    <input type="text" id="nombre">
+
+    <label>Nombre <span class="idioma-tag">Español</span> <span id="spinnerNombre" style="display:none;" class="spinner-mini"></span></label>
+    <input type="text" id="nombreEs">
+
+    <label>Código (opcional)</label>
+    <input type="text" id="codigo">
+
+    <label>Categoría</label>
+    <select id="categoria">
+      <option value="Drinks">Drinks</option>
+      <option value="Yogurt">Yoghurt</option>
+      <option value="Desserts">Desserts</option>
+      <option value="Ice Cream">Ice Cream</option>
+      <option value="Artisanal Dairy">Artisanal Dairy</option>
+      <option value="Kefir Treat">Kefir Treat</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label>Sabor <span class="idioma-tag">Inglés</span></label>
+        <input type="text" id="sabor">
+      </div>
+      <div>
+        <label>Presentación</label>
+        <input type="text" id="presentacion">
       </div>
     </div>
-    <div class="header-right">
-      <button class="btn-lang" id="btnLang" onclick="toggleLang()">🇪🇸 ES</button>
-      <button class="btn-share-page" id="txt-share" onclick="compartirPagina()">Share</button>
+    <label>Sabor <span class="idioma-tag">Español</span> <span id="spinnerSabor" style="display:none;" class="spinner-mini"></span></label>
+    <input type="text" id="saborEs">
+
+    <div class="seccion-titulo">Description</div>
+    <label>Descripción <span class="idioma-tag">Inglés</span></label>
+    <textarea id="descripcion"></textarea>
+    <label>Descripción <span class="idioma-tag">Español</span> <span id="spinnerDesc" style="display:none;" class="spinner-mini"></span></label>
+    <textarea id="descripcionEs"></textarea>
+
+    <div class="seccion-titulo">Ingredients</div>
+    <label>Ingredientes <span class="idioma-tag">Inglés</span></label>
+    <textarea id="ingredientes"></textarea>
+    <label>Ingredientes <span class="idioma-tag">Español</span> <span id="spinnerIngr" style="display:none;" class="spinner-mini"></span></label>
+    <textarea id="ingredientesEs"></textarea>
+
+    <div class="seccion-titulo">Nutrition (per 100g)</div>
+    <div class="nutri-grid">
+      <div><label>Energy kJ</label><input type="text" id="nutriEnergiaKJ" placeholder="ej. 242"></div>
+      <div><label>Energy kcal</label><input type="text" id="nutriEnergiaKcal" placeholder="ej. 58"></div>
+      <div><label>Fat</label><input type="text" id="nutriGrasa" placeholder="ej. 3.0g"></div>
+      <div><label>of which saturates</label><input type="text" id="nutriGrasaSat" placeholder="ej. 1.9g"></div>
+      <div><label>Carbohydrates</label><input type="text" id="nutriCarbo" placeholder="ej. 4.4g"></div>
+      <div><label>of which sugars</label><input type="text" id="nutriAzucar" placeholder="ej. 3.7g"></div>
+      <div><label>Fibre</label><input type="text" id="nutriFibra" placeholder="ej. <0.5g"></div>
+      <div><label>Protein</label><input type="text" id="nutriProteina" placeholder="ej. 3.3g"></div>
+      <div><label>Salt</label><input type="text" id="nutriSal" placeholder="ej. 0.10g"></div>
     </div>
-  </div>
-</header>
 
-<div class="hero">
-  <img src="assets/icon/hero-full.png" alt="Kefify - Nutrition and quality for every moment">
-</div>
-<div class="location-banner" id="locationBanner">🇬🇧 London - England</div>
-
-<nav class="top-tabs">
-  <button class="tab-btn activo" data-panel="benefits" onclick="mostrarPanel('benefits')">
-    <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-9.5-9C.5 8.5 3 4 7 4c2 0 3.5 1 5 3 1.5-2 3-3 5-3 4 0 6.5 4.5 4.5 8-2.5 4.65-9.5 9-9.5 9z"/></svg>
-    <span id="tab-benefits">Benefits</span>
-  </button>
-  <button class="tab-btn" data-panel="products" onclick="mostrarPanel('products')">
-    <svg viewBox="0 0 24 24"><path d="M6 2l1.5 5h9L18 2"/><path d="M3.5 7h17l-1.5 13h-14z"/></svg>
-    <span id="tab-products">Products</span>
-  </button>
-  <button class="tab-btn" data-panel="about" onclick="mostrarPanel('about')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="12" y1="8" x2="12" y2="8"/></svg>
-    <span id="tab-about">About</span>
-  </button>
-  <button class="tab-btn" data-panel="recipes" onclick="mostrarPanel('recipes')">
-    <svg viewBox="0 0 24 24"><path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="14" y2="12"/></svg>
-    <span id="tab-recipes">Recipes</span>
-  </button>
-  <button class="tab-btn" data-panel="contact" onclick="mostrarPanel('contact')">
-    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-    <span id="tab-contact">Contact</span>
-  </button>
-</nav>
-
-<div id="benefits" class="panel activo">
-  <h2 id="txt-benefitsTitle">Benefits</h2>
-  <p class="subtitle" id="txt-benefitsSub">Why kefir is good for you</p>
-  <div class="benefits-grid">
-    <div class="benefit-card">
-      <div class="icon">🦠</div>
-      <h3 id="txt-b1t">Probiotics</h3>
-      <p id="txt-b1d">Rich in live cultures that support a healthy gut microbiome.</p>
-    </div>
-    <div class="benefit-card">
-      <div class="icon">🌿</div>
-      <h3 id="txt-b2t">Digestion</h3>
-      <p id="txt-b2d">Helps improve digestion and nutrient absorption naturally.</p>
-    </div>
-    <div class="benefit-card">
-      <div class="icon">🛡️</div>
-      <h3 id="txt-b3t">Immune support</h3>
-      <p id="txt-b3d">Supports a stronger immune system with regular consumption.</p>
-    </div>
-    <div class="benefit-card">
-      <div class="icon">🦴</div>
-      <h3 id="txt-b4t">Bone health</h3>
-      <p id="txt-b4d">A good source of calcium and protein for stronger bones.</p>
-    </div>
-  </div>
-</div>
-
-<div id="products" class="panel">
-  <h2 id="txt-productsTitle">Products</h2>
-  <p class="subtitle" id="txt-productsSub">Explore our full range</p>
-  <div class="filtros" id="filtros"></div>
-  <div class="grid" id="grid"></div>
-</div>
-
-<div id="about" class="panel">
-  <h2 id="txt-aboutTitle">About Us</h2>
-  <p class="subtitle" id="txt-aboutSub">Our story</p>
-  <div class="about-box">
-    <p id="txt-aboutP1">Kefify was born from a passion for traditional fermentation and natural nutrition. We craft our kefir-based products using authentic Bulgarian cultures, combining time-honoured methods with careful attention to quality.</p>
-    <p id="txt-aboutP2">Every bottle, tub and wheel of cheese is made with care, so you can enjoy the real benefits of kefir in a delicious way.</p>
-  </div>
-</div>
-
-<div id="recipes" class="panel">
-  <h2 id="txt-recipesTitle">Recipes</h2>
-  <p class="subtitle" id="txt-recipesSub">Simple ideas with Kefify products</p>
-  <div class="recipes-grid">
-    <div class="recipe-card">
-      <h3 id="txt-r1t">Kefir Smoothie</h3>
-      <p id="txt-r1d">Blend Kefify kefir drink with your favourite fruits and a spoon of honey for a refreshing breakfast.</p>
-    </div>
-    <div class="recipe-card">
-      <h3 id="txt-r2t">Herb Butter Toast</h3>
-      <p id="txt-r2d">Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.</p>
-    </div>
-    <div class="recipe-card">
-      <h3 id="txt-r3t">Yoghurt Bowl</h3>
-      <p id="txt-r3d">Layer Kefify yoghurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.</p>
-    </div>
-  </div>
-</div>
-
-<div id="contact" class="panel">
-  <h2 id="txt-contactTitle">Contact</h2>
-  <p class="subtitle" id="txt-contactSub">We'd love to hear from you</p>
-  <div class="contact-box">
-    <p id="txt-contactP">Message us directly on WhatsApp and we'll get back to you shortly.</p>
-    <a href="https://wa.me/447446830987" class="btn-contact-whatsapp" target="_blank" id="txt-contactBtn">🇬🇧 Message us on WhatsApp</a>
-  </div>
-</div>
-
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <img id="modalImg" src="" alt="">
-    <div class="modal-body">
-      <h2 id="modalNombre"></h2>
-      <div class="modal-precio" id="modalPrecio"></div>
-
-      <div class="modal-tabs">
-        <button class="modal-tab-btn activo" data-mpanel="mDesc" onclick="mostrarModalPanel('mDesc')" id="mtab-desc">Description</button>
-        <button class="modal-tab-btn" data-mpanel="mIngr" onclick="mostrarModalPanel('mIngr')" id="mtab-ingr">Ingredients</button>
-        <button class="modal-tab-btn" data-mpanel="mNutri" onclick="mostrarModalPanel('mNutri')" id="mtab-nutri">Nutrition</button>
+    <div class="seccion-titulo">Precios y stock</div>
+    <div class="row">
+      <div>
+        <label>Costo proveedor (£)</label>
+        <input type="number" id="costoProveedor">
       </div>
-
-      <div class="modal-panel activo" id="mDesc"></div>
-      <div class="modal-panel" id="mIngr"></div>
-      <div class="modal-panel" id="mNutri">
-        <table class="nutri-table" id="nutriTable"></table>
+      <div>
+        <label>Precio venta UK (£)</label>
+        <input type="number" id="precioVenta">
       </div>
-
-      <a href="#" id="modalWhatsapp" class="btn-whatsapp" target="_blank"><span id="txt-askWa">🇬🇧 Ask on WhatsApp</span></a>
-      <button class="btn-share-product" onclick="compartirProducto()" id="txt-shareProd">Share this product</button>
-      <div class="btn-cerrar" onclick="cerrarModal()" id="txt-close">Close</div>
     </div>
+    <label>Precio venta Colombia ($ COP)</label>
+    <input type="number" id="precioVentaCOP">
+
+    <div class="switch-row">
+      <input type="checkbox" id="enStock" checked style="width:auto;">
+      <label style="margin:0;">En stock</label>
+    </div>
+
+    <div class="seccion-titulo">Proveedor</div>
+    <label>Nombre del proveedor</label>
+    <input type="text" id="proveedorNombre">
+    <label>WhatsApp del proveedor</label>
+    <input type="text" id="proveedorWhatsapp">
+
+    <button class="btn-primary" onclick="guardarProducto()">Guardar producto</button>
+    <div class="estado" id="estado"></div>
+    <button class="btn-secondary" style="margin-top:10px; width:100%;" onclick="limpiarFormulario()">Cancelar / Nuevo producto</button>
   </div>
+
+  <div class="card">
+    <h3>Productos existentes</h3>
+    <button class="btn-secondary" style="width:100%; margin-bottom:12px;" onclick="traducirTodos()">🔁 Traducir todos los productos</button>
+    <div class="estado" id="estadoTraduccion"></div>
+    <div id="listaProductos"></div>
+  </div>
+
+</div>
 </div>
 
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAJ1z4uI5ngMtagQWtEljdWl05ufutPBs0",
+  authDomain: "kefify-86360.firebaseapp.com",
+  projectId: "kefify-86360"
+};
+firebase.initializeApp(firebaseConfig);
+
+const CODIGO_ACCESO = 'kefify2026';
 const PROJECT_ID = 'kefify-86360';
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents/productos`;
-const SITE_URL = 'https://kefify.co.uk/';
+const CLOUDINARY_CLOUD = 'iggcl810';
+const CLOUDINARY_PRESET = 'kefify_preset';
+const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
 
-const NUMEROS = { en: '447446830987', es: '573226082281' };
+const CAMPOS_TEXTO = ['nombre','nombreEs','codigo','sabor','saborEs','presentacion','descripcion','descripcionEs','ingredientes','ingredientesEs','proveedorNombre','proveedorWhatsapp','nutriEnergiaKJ','nutriEnergiaKcal','nutriGrasa','nutriGrasaSat','nutriCarbo','nutriAzucar','nutriFibra','nutriProteina','nutriSal'];
 
-const CATEGORIAS_FIJAS = ['Drinks', 'Yogurt', 'Desserts', 'Ice Cream', 'Artisanal Dairy'];
+let fotosSubidas = [];
+let editandoId = null;
+let productosCache = [];
 
-let productos = [];
-let categoriaActiva = 'Drinks';
-let productoActual = null;
-let currentLang = localStorage.getItem('kefify_lang') || 'en';
-
-async function detectarPais() {
-  if (localStorage.getItem('kefify_lang')) return;
-  try {
-    const res = await fetch('https://ipapi.co/json/');
-    const data = await res.json();
-    if (data.country_code === 'CO') {
-      currentLang = 'es';
-      applyTranslations();
-      renderFiltros();
-      renderGrid();
+async function verificarCodigo() {
+  const val = document.getElementById('codigoAcceso').value;
+  if (val === CODIGO_ACCESO) {
+    try {
+      await firebase.auth().signInAnonymously();
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('panel').style.display = 'block';
+      cargarLista();
+    } catch (e) {
+      alert('Error al iniciar sesión. Intenta de nuevo.');
     }
-  } catch (e) {}
-}
-
-const T = {
-  en: {
-    subtitle: 'KEFIR | BULGARIAN CULTURES | HEALTHY',
-    share: 'Share',
-    location: '🇬🇧 London - England',
-    splashBtn: 'Discover your balance',
-    tabBenefits: 'Benefits', tabProducts: 'Products', tabAbout: 'About', tabRecipes: 'Recipes', tabContact: 'Contact',
-    benefitsTitle: 'Benefits', benefitsSub: 'Why kefir is good for you',
-    b1t: 'Probiotics', b1d: 'Rich in live cultures that support a healthy gut microbiome.',
-    b2t: 'Digestion', b2d: 'Helps improve digestion and nutrient absorption naturally.',
-    b3t: 'Immune support', b3d: 'Supports a stronger immune system with regular consumption.',
-    b4t: 'Bone health', b4d: 'A good source of calcium and protein for stronger bones.',
-    productsTitle: 'Products', productsSub: 'Explore our full range',
-    categories: { Drinks: 'Drinks', Yogurt: 'Yoghurt', Desserts: 'Desserts', 'Ice Cream': 'Ice Cream', 'Artisanal Dairy': 'Artisanal Dairy' },
-    inStock: 'In stock', outStock: 'Out of stock',
-    noProducts: 'No products in this category yet.', loadError: 'Could not load the catalog. Please try again.',
-    aboutTitle: 'About Us', aboutSub: 'Our story',
-    aboutP1: 'Kefify was born from a passion for traditional fermentation and natural nutrition. We craft our kefir-based products using authentic Bulgarian cultures, combining time-honoured methods with careful attention to quality.',
-    aboutP2: 'Every bottle, tub and wheel of cheese is made with care, so you can enjoy the real benefits of kefir in a delicious way.',
-    recipesTitle: 'Recipes', recipesSub: 'Simple ideas with Kefify products',
-    r1t: 'Kefir Smoothie', r1d: 'Blend Kefify kefir drink with your favourite fruits and a spoon of honey for a refreshing breakfast.',
-    r2t: 'Herb Butter Toast', r2d: 'Spread Kefify artisanal butter on warm toast, top with fresh herbs and a pinch of sea salt.',
-    r3t: 'Yoghurt Bowl', r3d: 'Layer Kefify yoghurt with granola, seasonal fruit and a drizzle of honey for a wholesome snack.',
-    contactTitle: 'Contact', contactSub: "We'd love to hear from you",
-    contactP: "Message us directly on WhatsApp and we'll get back to you shortly.",
-    contactBtn: '🇬🇧 Message us on WhatsApp',
-    askWa: '🇬🇧 Ask on WhatsApp', shareProd: 'Share this product', close: 'Close',
-    shareTitle: 'Kefify', shareText: 'Check out the Kefify catalog',
-    copied: 'Link copied to clipboard!', productCopied: 'Product info copied to clipboard!',
-    askMsg: (name) => `Hi, I'm interested in this product: ${name}`,
-    mTabDesc: 'Description', mTabIngr: 'Ingredients', mTabNutri: 'Nutrition',
-    noIngr: 'No ingredients listed.', noNutri: 'No nutrition information available.',
-    typicalValues: 'Typical values', per100g: 'per 100g',
-    nEnergyKJ: 'Energy kJ', nEnergyKcal: 'Energy kcal', nFat: 'Fat', nSat: 'of which saturates',
-    nCarbo: 'Carbohydrates', nSugar: 'of which sugars', nFibre: 'Fibre', nProtein: 'Protein', nSalt: 'Salt'
-  },
-  es: {
-    subtitle: 'KEFIR | CULTIVOS BÚLGAROS | SALUDABLE',
-    share: 'Compartir',
-    location: '🇨🇴 Palmira - Colombia',
-    splashBtn: 'Descubre tu equilibrio',
-    tabBenefits: 'Beneficios', tabProducts: 'Productos', tabAbout: 'Nosotros', tabRecipes: 'Recetas', tabContact: 'Contacto',
-    benefitsTitle: 'Beneficios', benefitsSub: 'Por qué el kéfir es bueno para ti',
-    b1t: 'Probióticos', b1d: 'Rico en cultivos vivos que apoyan un microbioma intestinal saludable.',
-    b2t: 'Digestión', b2d: 'Ayuda a mejorar la digestión y la absorción de nutrientes de forma natural.',
-    b3t: 'Sistema inmune', b3d: 'Fortalece el sistema inmunológico con un consumo regular.',
-    b4t: 'Salud ósea', b4d: 'Buena fuente de calcio y proteína para huesos más fuertes.',
-    productsTitle: 'Productos', productsSub: 'Explora toda nuestra línea',
-    categories: { Drinks: 'Bebidas', Yogurt: 'Yogur', Desserts: 'Postres', 'Ice Cream': 'Helado', 'Artisanal Dairy': 'Lácteos Artesanales' },
-    inStock: 'Disponible', outStock: 'Agotado',
-    noProducts: 'Aún no hay productos en esta categoría.', loadError: 'No se pudo cargar el catálogo. Intenta de nuevo.',
-    aboutTitle: 'Nosotros', aboutSub: 'Nuestra historia',
-    aboutP1: 'Kefify nació de la pasión por la fermentación tradicional y la nutrición natural. Elaboramos nuestros productos a base de kéfir con cultivos búlgaros auténticos, combinando métodos tradicionales con un cuidado especial en la calidad.',
-    aboutP2: 'Cada botella, tarrina y rueda de queso está hecha con dedicación, para que disfrutes los verdaderos beneficios del kéfir de forma deliciosa.',
-    recipesTitle: 'Recetas', recipesSub: 'Ideas sencillas con productos Kefify',
-    r1t: 'Batido de kéfir', r1d: 'Licúa la bebida de kéfir Kefify con tus frutas favoritas y una cucharada de miel para un desayuno refrescante.',
-    r2t: 'Tostada con mantequilla de hierbas', r2d: 'Unta la mantequilla artesanal Kefify en pan tostado, agrega hierbas frescas y una pizca de sal marina.',
-    r3t: 'Bowl de yogur', r3d: 'Combina el yogur Kefify con granola, fruta de temporada y un toque de miel para una merienda saludable.',
-    contactTitle: 'Contacto', contactSub: 'Nos encantaría saber de ti',
-    contactP: 'Escríbenos directamente por WhatsApp y te responderemos pronto.',
-    contactBtn: '🇨🇴 Escríbenos por WhatsApp',
-    askWa: '🇨🇴 Preguntar por WhatsApp', shareProd: 'Compartir producto', close: 'Cerrar',
-    shareTitle: 'Kefify', shareText: 'Mira el catálogo de Kefify',
-    copied: '¡Enlace copiado!', productCopied: '¡Información del producto copiada!',
-    askMsg: (name) => `Hola, me interesa este producto: ${name}`,
-    mTabDesc: 'Descripción', mTabIngr: 'Ingredientes', mTabNutri: 'Nutrición',
-    noIngr: 'No hay ingredientes listados.', noNutri: 'No hay información nutricional disponible.',
-    typicalValues: 'Valores típicos', per100g: 'por 100g',
-    nEnergyKJ: 'Energía kJ', nEnergyKcal: 'Energía kcal', nFat: 'Grasas', nSat: 'de las cuales saturadas',
-    nCarbo: 'Carbohidratos', nSugar: 'de los cuales azúcares', nFibre: 'Fibra', nProtein: 'Proteína', nSalt: 'Sal'
+  } else {
+    alert('Código incorrecto');
   }
-};
-
-function entrarCatalogo() {
-  const splash = document.getElementById('splash');
-  splash.style.opacity = '0';
-  setTimeout(() => splash.style.display = 'none', 800);
 }
 
-function mostrarPanel(id) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('activo'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
-  document.getElementById(id).classList.add('activo');
-  document.querySelector(`.tab-btn[data-panel="${id}"]`).classList.add('activo');
-}
-
-function mostrarModalPanel(id) {
-  document.querySelectorAll('.modal-panel').forEach(p => p.classList.remove('activo'));
-  document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('activo'));
-  document.getElementById(id).classList.add('activo');
-  document.querySelector(`.modal-tab-btn[data-mpanel="${id}"]`).classList.add('activo');
-}
-
-function toggleLang() {
-  currentLang = currentLang === 'en' ? 'es' : 'en';
-  localStorage.setItem('kefify_lang', currentLang);
-  applyTranslations();
-  renderFiltros();
-  renderGrid();
-}
-
-function applyTranslations() {
-  const t = T[currentLang];
-  const numero = NUMEROS[currentLang];
-  const langLabel = currentLang === 'en' ? '🇪🇸 ES' : '🇬🇧 EN';
-  document.getElementById('btnLang').textContent = langLabel;
-  document.getElementById('btnLangSplash').textContent = langLabel;
-  document.getElementById('btnEntrar').textContent = t.splashBtn;
-  document.getElementById('txt-subtitle').textContent = t.subtitle;
-  document.getElementById('locationBanner').textContent = t.location;
-  document.getElementById('txt-share').textContent = t.share;
-  document.getElementById('tab-benefits').textContent = t.tabBenefits;
-  document.getElementById('tab-products').textContent = t.tabProducts;
-  document.getElementById('tab-about').textContent = t.tabAbout;
-  document.getElementById('tab-recipes').textContent = t.tabRecipes;
-  document.getElementById('tab-contact').textContent = t.tabContact;
-  document.getElementById('txt-benefitsTitle').textContent = t.benefitsTitle;
-  document.getElementById('txt-benefitsSub').textContent = t.benefitsSub;
-  document.getElementById('txt-b1t').textContent = t.b1t; document.getElementById('txt-b1d').textContent = t.b1d;
-  document.getElementById('txt-b2t').textContent = t.b2t; document.getElementById('txt-b2d').textContent = t.b2d;
-  document.getElementById('txt-b3t').textContent = t.b3t; document.getElementById('txt-b3d').textContent = t.b3d;
-  document.getElementById('txt-b4t').textContent = t.b4t; document.getElementById('txt-b4d').textContent = t.b4d;
-  document.getElementById('txt-productsTitle').textContent = t.productsTitle;
-  document.getElementById('txt-productsSub').textContent = t.productsSub;
-  document.getElementById('txt-aboutTitle').textContent = t.aboutTitle;
-  document.getElementById('txt-aboutSub').textContent = t.aboutSub;
-  document.getElementById('txt-aboutP1').textContent = t.aboutP1;
-  document.getElementById('txt-aboutP2').textContent = t.aboutP2;
-  document.getElementById('txt-recipesTitle').textContent = t.recipesTitle;
-  document.getElementById('txt-recipesSub').textContent = t.recipesSub;
-  document.getElementById('txt-r1t').textContent = t.r1t; document.getElementById('txt-r1d').textContent = t.r1d;
-  document.getElementById('txt-r2t').textContent = t.r2t; document.getElementById('txt-r2d').textContent = t.r2d;
-  document.getElementById('txt-r3t').textContent = t.r3t; document.getElementById('txt-r3d').textContent = t.r3d;
-  document.getElementById('txt-contactTitle').textContent = t.contactTitle;
-  document.getElementById('txt-contactSub').textContent = t.contactSub;
-  document.getElementById('txt-contactP').textContent = t.contactP;
-  document.getElementById('txt-contactBtn').textContent = t.contactBtn;
-  document.getElementById('txt-contactBtn').href = `https://wa.me/${numero}`;
-  document.getElementById('txt-askWa').textContent = t.askWa;
-  document.getElementById('txt-shareProd').textContent = t.shareProd;
-  document.getElementById('txt-close').textContent = t.close;
-  document.getElementById('mtab-desc').textContent = t.mTabDesc;
-  document.getElementById('mtab-ingr').textContent = t.mTabIngr;
-  document.getElementById('mtab-nutri').textContent = t.mTabNutri;
-}
-
-function parseFirestoreDoc(doc) {
-  const f = doc.fields || {};
-  const getStr = (k) => f[k]?.stringValue || '';
-  const getNum = (k) => f[k]?.doubleValue ?? f[k]?.integerValue ?? 0;
-  const getBool = (k) => f[k]?.booleanValue ?? true;
-  const getArr = (k) => (f[k]?.arrayValue?.values || []).map(v => v.stringValue);
-  return {
-    id: doc.name.split('/').pop(),
-    nombre: getStr('nombre'), nombreEs: getStr('nombreEs'),
-    categoria: getStr('categoria'),
-    sabor: getStr('sabor'), saborEs: getStr('saborEs'), presentacion: getStr('presentacion'),
-    descripcion: getStr('descripcion'), descripcionEs: getStr('descripcionEs'),
-    ingredientes: getStr('ingredientes'), ingredientesEs: getStr('ingredientesEs'),
-    nutriEnergiaKJ: getStr('nutriEnergiaKJ'), nutriEnergiaKcal: getStr('nutriEnergiaKcal'),
-    nutriGrasa: getStr('nutriGrasa'), nutriGrasaSat: getStr('nutriGrasaSat'),
-    nutriCarbo: getStr('nutriCarbo'), nutriAzucar: getStr('nutriAzucar'),
-    nutriFibra: getStr('nutriFibra'), nutriProteina: getStr('nutriProteina'), nutriSal: getStr('nutriSal'),
-    precioVenta: parseFloat(getNum('precioVenta')),
-    precioVentaCOP: parseFloat(getNum('precioVentaCOP')),
-    enStock: getBool('enStock'),
-    fotos: getArr('fotos'),
-  };
-}
-
-async function cargarProductos() {
+async function traducirTexto(texto) {
+  if (!texto) return '';
   try {
-    const res = await fetch(FIRESTORE_URL);
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=en|es`);
     const data = await res.json();
-    productos = (data.documents || []).map(parseFirestoreDoc);
-    renderFiltros();
-    renderGrid();
+    return data.responseData?.translatedText || '';
   } catch (e) {
-    document.getElementById('grid').innerHTML = `<p class="vacio">${T[currentLang].loadError}</p>`;
+    return '';
   }
 }
 
-function renderFiltros() {
-  const t = T[currentLang];
-  const cont = document.getElementById('filtros');
-  cont.innerHTML = CATEGORIAS_FIJAS.map(c =>
-    `<button class="filtro-btn ${c === categoriaActiva ? 'activo' : ''}" onclick="filtrar('${c}')">${t.categories[c] || c}</button>`
+function conectarAutoTraduccion(idOrigen, idDestino, idSpinner) {
+  document.getElementById(idOrigen).addEventListener('blur', async () => {
+    const origen = document.getElementById(idOrigen).value.trim();
+    const destino = document.getElementById(idDestino);
+    if (!origen || destino.value.trim()) return;
+    document.getElementById(idSpinner).style.display = 'inline-block';
+    destino.value = await traducirTexto(origen);
+    document.getElementById(idSpinner).style.display = 'none';
+  });
+}
+conectarAutoTraduccion('nombre', 'nombreEs', 'spinnerNombre');
+conectarAutoTraduccion('descripcion', 'descripcionEs', 'spinnerDesc');
+conectarAutoTraduccion('ingredientes', 'ingredientesEs', 'spinnerIngr');
+conectarAutoTraduccion('sabor', 'saborEs', 'spinnerSabor');
+
+document.getElementById('fotosInput').addEventListener('change', async (e) => {
+  const archivos = Array.from(e.target.files);
+  const estado = document.getElementById('estado');
+  estado.textContent = 'Subiendo fotos...';
+  for (const archivo of archivos) {
+    const formData = new FormData();
+    formData.append('file', archivo);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+    try {
+      const res = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.secure_url) {
+        fotosSubidas.push(data.secure_url);
+        renderFotosPreview();
+      }
+    } catch (err) {
+      estado.textContent = 'Error subiendo una foto';
+    }
+  }
+  estado.textContent = '';
+});
+
+function renderFotosPreview() {
+  const cont = document.getElementById('fotosPreview');
+  cont.innerHTML = fotosSubidas.map((url, i) =>
+    `<div style="position:relative;">
+      <img src="${url}">
+      <button onclick="quitarFoto(${i})" style="position:absolute; top:-6px; right:-6px; background:#c00; color:white; border:none; border-radius:50%; width:20px; height:20px; font-size:11px;">×</button>
+    </div>`
   ).join('');
 }
 
-function filtrar(cat) {
-  if (cat === categoriaActiva) return;
-  categoriaActiva = cat;
-  renderFiltros();
-  renderGrid();
+function quitarFoto(i) {
+  fotosSubidas.splice(i, 1);
+  renderFotosPreview();
 }
 
-function renderGrid() {
-  const t = T[currentLang];
-  const grid = document.getElementById('grid');
-  const lista = productos.filter(p => p.categoria === categoriaActiva);
+function toFirestoreFields(obj) {
+  const fields = {};
+  for (const key in obj) {
+    const val = obj[key];
+    if (typeof val === 'string') fields[key] = { stringValue: val };
+    else if (typeof val === 'number') fields[key] = { doubleValue: val };
+    else if (typeof val === 'boolean') fields[key] = { booleanValue: val };
+    else if (Array.isArray(val)) fields[key] = { arrayValue: { values: val.map(v => ({ stringValue: v })) } };
+  }
+  return fields;
+}
 
-  if (lista.length === 0) {
-    grid.innerHTML = `<p class="vacio">${t.noProducts}</p>`;
-  } else {
-    grid.innerHTML = lista.map((p, i) => {
-      const precioTxt = currentLang === 'es'
-        ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
-        : '£' + p.precioVenta.toFixed(0);
-      const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
-      return `
-      <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
-        <img src="${p.fotos[0] || ''}" alt="${nombreMostrar}" onerror="this.style.display='none'">
-        <div class="card-body">
-          <h3>${nombreMostrar}</h3>
-          <div class="precio">${precioTxt}</div>
-          <div class="stock">${p.enStock ? t.inStock : t.outStock}</div>
+function fromFirestoreDoc(doc) {
+  const f = doc.fields || {};
+  const getStr = (k) => f[k]?.stringValue || '';
+  const getNum = (k) => parseFloat(f[k]?.doubleValue ?? f[k]?.integerValue ?? 0);
+  const getBool = (k) => f[k]?.booleanValue ?? true;
+  const getArr = (k) => (f[k]?.arrayValue?.values || []).map(v => v.stringValue);
+  const obj = {
+    id: doc.name.split('/').pop(),
+    categoria: getStr('categoria'),
+    costoProveedor: getNum('costoProveedor'), precioVenta: getNum('precioVenta'), precioVentaCOP: getNum('precioVentaCOP'),
+    enStock: getBool('enStock'), fotos: getArr('fotos'),
+    fechaCreacion: getStr('fechaCreacion')
+  };
+  CAMPOS_TEXTO.forEach(c => obj[c] = getStr(c));
+  return obj;
+}
+
+async function obtenerHeaders() {
+  const user = firebase.auth().currentUser;
+  if (!user) return {};
+  const token = await user.getIdToken();
+  return { 'Authorization': `Bearer ${token}` };
+}
+
+async function guardarProducto() {
+  const estado = document.getElementById('estado');
+  const nombre = document.getElementById('nombre').value.trim();
+  if (!nombre) { estado.textContent = 'Escribe el nombre del producto'; return; }
+
+  const datos = {
+    categoria: document.getElementById('categoria').value,
+    costoProveedor: parseFloat(document.getElementById('costoProveedor').value) || 0,
+    precioVenta: parseFloat(document.getElementById('precioVenta').value) || 0,
+    precioVentaCOP: parseFloat(document.getElementById('precioVentaCOP').value) || 0,
+    enStock: document.getElementById('enStock').checked,
+    fotos: fotosSubidas,
+    fechaCreacion: new Date().toISOString()
+  };
+  CAMPOS_TEXTO.forEach(c => datos[c] = document.getElementById(c).value.trim());
+
+  estado.textContent = 'Guardando...';
+  try {
+    const fields = toFirestoreFields(datos);
+    const authHeaders = await obtenerHeaders();
+    if (editandoId) {
+      const mask = Object.keys(datos).map(k => `updateMask.fieldPaths=${k}`).join('&');
+      const res = await fetch(`${FIRESTORE_URL}/${editandoId}?${mask}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
+        body: JSON.stringify({ fields })
+      });
+      if (!res.ok) throw new Error();
+      estado.textContent = 'Producto actualizado';
+    } else {
+      const res = await fetch(FIRESTORE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
+        body: JSON.stringify({ fields })
+      });
+      if (!res.ok) throw new Error();
+      estado.textContent = 'Producto guardado';
+    }
+    limpiarFormulario();
+    cargarLista();
+  } catch (e) {
+    estado.textContent = 'Error al guardar. Intenta de nuevo.';
+  }
+}
+
+function limpiarFormulario() {
+  editandoId = null;
+  fotosSubidas = [];
+  renderFotosPreview();
+  document.getElementById('formTitulo').textContent = 'Nuevo producto';
+  CAMPOS_TEXTO.forEach(id => document.getElementById(id).value = '');
+  ['costoProveedor','precioVenta','precioVentaCOP'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('categoria').value = 'Drinks';
+  document.getElementById('enStock').checked = true;
+  document.getElementById('estado').textContent = '';
+}
+
+async function cargarLista() {
+  const cont = document.getElementById('listaProductos');
+  cont.innerHTML = 'Cargando...';
+  try {
+    const res = await fetch(FIRESTORE_URL);
+    const data = await res.json();
+    productosCache = (data.documents || []).map(fromFirestoreDoc);
+    if (productosCache.length === 0) {
+      cont.innerHTML = '<p style="color:#888; font-size:13px;">No hay productos todavía.</p>';
+      return;
+    }
+    cont.innerHTML = productosCache.map(p => `
+      <div class="lista-item">
+        <img src="${p.fotos[0] || ''}" onerror="this.style.display='none'">
+        <div class="info">
+          <h4>${p.nombre}</h4>
+          <p>${p.categoria} · £${p.precioVenta} · ${p.enStock ? 'En stock' : 'Agotado'}</p>
+        </div>
+        <div class="acciones">
+          <button onclick="editarProducto('${p.id}')">Editar</button>
+          <button onclick="eliminarProducto('${p.id}')">Eliminar</button>
         </div>
       </div>
-    `}).join('');
+    `).join('');
+  } catch (e) {
+    cont.innerHTML = '<p style="color:#c00;">Error cargando productos</p>';
+  }
+}
+
+function editarProducto(id) {
+  const p = productosCache.find(x => x.id === id);
+  if (!p) return;
+  editandoId = id;
+  fotosSubidas = [...p.fotos];
+  renderFotosPreview();
+  document.getElementById('formTitulo').textContent = 'Editar producto';
+  CAMPOS_TEXTO.forEach(c => document.getElementById(c).value = p[c] || '');
+  document.getElementById('categoria').value = p.categoria;
+  document.getElementById('costoProveedor').value = p.costoProveedor;
+  document.getElementById('precioVenta').value = p.precioVenta;
+  document.getElementById('precioVentaCOP').value = p.precioVentaCOP;
+  document.getElementById('enStock').checked = p.enStock;
+  window.scrollTo(0, 0);
+}
+
+async function eliminarProducto(id) {
+  if (!confirm('¿Eliminar este producto?')) return;
+  try {
+    const authHeaders = await obtenerHeaders();
+    await fetch(`${FIRESTORE_URL}/${id}`, { method: 'DELETE', headers: authHeaders });
+    cargarLista();
+  } catch (e) {
+    alert('Error al eliminar');
+  }
+}
+
+async function traducirTodos() {
+  const estado = document.getElementById('estadoTraduccion');
+  if (productosCache.length === 0) {
+    estado.textContent = 'No hay productos cargados. Espera a que termine de cargar la lista.';
+    return;
   }
 
-  grid.classList.remove('transicionando');
-  void grid.offsetWidth;
-  grid.classList.add('transicionando');
+  const camposATraducir = [
+    ['nombre', 'nombreEs'],
+    ['descripcion', 'descripcionEs'],
+    ['ingredientes', 'ingredientesEs'],
+    ['sabor', 'saborEs']
+  ];
+
+  let actualizados = 0;
+  let revisados = 0;
+  const authHeaders = await obtenerHeaders();
+
+  for (const p of productosCache) {
+    revisados++;
+    estado.textContent = `Revisando ${revisados} de ${productosCache.length}...`;
+    const cambios = {};
+    let necesitaGuardar = false;
+
+    for (const [origen, destino] of camposATraducir) {
+      const textoOrigen = (p[origen] || '').trim();
+      const textoDestino = (p[destino] || '').trim();
+      if (textoOrigen && !textoDestino) {
+        const traducido = await traducirTexto(textoOrigen);
+        if (traducido) {
+          cambios[destino] = traducido;
+          necesitaGuardar = true;
+        }
+      }
+    }
+
+    if (necesitaGuardar) {
+      try {
+        const fields = toFirestoreFields(cambios);
+        const mask = Object.keys(cambios).map(k => `updateMask.fieldPaths=${k}`).join('&');
+        await fetch(`${FIRESTORE_URL}/${p.id}?${mask}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', ...authHeaders },
+          body: JSON.stringify({ fields })
+        });
+        actualizados++;
+      } catch (e) {}
+    }
+  }
+
+  estado.textContent = `Listo. ${actualizados} producto(s) actualizado(s) con traducciones.`;
+  cargarLista();
 }
-
-function construirTablaNutricion(p, t) {
-  const filas = [
-    [t.nEnergyKJ, p.nutriEnergiaKJ],
-    [t.nEnergyKcal, p.nutriEnergiaKcal],
-    [t.nFat, p.nutriGrasa],
-    [t.nSat, p.nutriGrasaSat],
-    [t.nCarbo, p.nutriCarbo],
-    [t.nSugar, p.nutriAzucar],
-    [t.nFibre, p.nutriFibra],
-    [t.nProtein, p.nutriProteina],
-    [t.nSalt, p.nutriSal],
-  ].filter(f => f[1]);
-
-  if (filas.length === 0) return `<p style="color:#888;">${t.noNutri}</p>`;
-
-  let html = `<table class="nutri-table"><tr><td>${t.typicalValues}</td><td>${t.per100g}</td></tr>`;
-  filas.forEach(f => {
-    html += `<tr><td>${f[0]}</td><td>${f[1]}</td></tr>`;
-  });
-  html += '</table>';
-  return html;
-}
-
-function abrirModal(index) {
-  const t = T[currentLang];
-  const numero = NUMEROS[currentLang];
-  const p = productos[index];
-  productoActual = p;
-  document.getElementById('modalImg').src = p.fotos[0] || '';
-  const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
-  const descripcionMostrar = currentLang === 'es' && p.descripcionEs ? p.descripcionEs : p.descripcion;
-  const ingredientesMostrar = currentLang === 'es' && p.ingredientesEs ? p.ingredientesEs : p.ingredientes;
-  const saborMostrar = currentLang === 'es' && p.saborEs ? p.saborEs : p.sabor;
-
-  document.getElementById('modalNombre').textContent = nombreMostrar;
-  const precioTxt = currentLang === 'es'
-    ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
-    : '£' + p.precioVenta.toFixed(0);
-  document.getElementById('modalPrecio').textContent = precioTxt;
-
-  document.getElementById('mDesc').textContent =
-    [saborMostrar, p.presentacion, descripcionMostrar].filter(Boolean).join(' | ');
-  document.getElementById('mIngr').textContent = ingredientesMostrar || t.noIngr;
-
-  const nutriHtml = construirTablaNutricion(p, t);
-  const nutriPanel = document.getElementById('mNutri');
-  nutriPanel.innerHTML = nutriHtml;
-
-  mostrarModalPanel('mDesc');
-
-  const mensaje = encodeURIComponent(t.askMsg(nombreMostrar));
-  document.getElementById('modalWhatsapp').href = `https://wa.me/${numero}?text=${mensaje}`;
-  document.getElementById('modal').classList.add('abierto');
-}
-
-function cerrarModal() {
-  document.getElementById('modal').classList.remove('abierto');
-}
-
-async function compartirPagina() {
-  const t = T[currentLang];
-  const shareData = { title: t.shareTitle, text: t.shareText, url: SITE_URL };
-  try {
-    if (navigator.share) { await navigator.share(shareData); }
-    else { await navigator.clipboard.writeText(SITE_URL); alert(t.copied); }
-  } catch (e) {}
-}
-
-async function compartirProducto() {
-  if (!productoActual) return;
-  const t = T[currentLang];
-  const p = productoActual;
-  const precioTxt = currentLang === 'es'
-    ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
-    : '£' + p.precioVenta.toFixed(0);
-  const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
-  const shareData = { title: nombreMostrar, text: `${nombreMostrar} - ${precioTxt}`, url: SITE_URL };
-  try {
-    if (navigator.share) { await navigator.share(shareData); }
-    else { await navigator.clipboard.writeText(`${nombreMostrar} - ${precioTxt} - ${SITE_URL}`); alert(t.productCopied); }
-  } catch (e) {}
-}
-
-applyTranslations();
-cargarProductos();
-detectarPais();
 </script>
 </body>
 </html>
