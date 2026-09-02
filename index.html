@@ -275,6 +275,15 @@ let categoriaActiva = 'Drinks';
 let productoActual = null;
 let currentLang = localStorage.getItem('kefify_lang') || 'en';
 
+function formatearPrecio(p) {
+  if (currentLang === 'es') {
+    return '$' + Math.round(p.precioVentaCOP).toLocaleString('es-CO');
+  }
+  const gbp = p.precioVenta;
+  const esEntero = Number.isInteger(gbp);
+  return '£' + (esEntero ? gbp.toFixed(0) : gbp.toFixed(2));
+}
+
 async function detectarPais() {
   if (localStorage.getItem('kefify_lang')) return;
   try {
@@ -495,9 +504,7 @@ function renderGrid() {
     grid.innerHTML = `<p class="vacio">${t.noProducts}</p>`;
   } else {
     grid.innerHTML = lista.map((p, i) => {
-      const precioTxt = currentLang === 'es'
-        ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
-        : '£' + p.precioVenta.toFixed(0);
+      const precioTxt = formatearPrecio(p);
       const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
       return `
       <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
@@ -551,10 +558,7 @@ function abrirModal(index) {
   const saborMostrar = currentLang === 'es' && p.saborEs ? p.saborEs : p.sabor;
 
   document.getElementById('modalNombre').textContent = nombreMostrar;
-  const precioTxt = currentLang === 'es'
-    ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
-    : '£' + p.precioVenta.toFixed(0);
-  document.getElementById('modalPrecio').textContent = precioTxt;
+  document.getElementById('modalPrecio').textContent = formatearPrecio(p);
 
   document.getElementById('mDesc').textContent =
     [saborMostrar, p.presentacion, descripcionMostrar].filter(Boolean).join(' | ');
@@ -588,9 +592,7 @@ async function compartirProducto() {
   if (!productoActual) return;
   const t = T[currentLang];
   const p = productoActual;
-  const precioTxt = currentLang === 'es'
-    ? '$' + p.precioVentaCOP.toLocaleString('es-CO')
-    : '£' + p.precioVenta.toFixed(0);
+  const precioTxt = formatearPrecio(p);
   const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
   const shareData = { title: nombreMostrar, text: `${nombreMostrar} - ${precioTxt}`, url: SITE_URL };
   try {
