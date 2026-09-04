@@ -74,10 +74,19 @@
   .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; padding: 16px; }
   .modal.abierto { display: flex; }
   .modal-content { background: white; border-radius: 12px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; }
-  .modal-content img { width: 100%; max-height: 320px; object-fit: contain; background: #f4f9f7; }
   .modal-body { padding: 16px; }
   .modal-body h2 { margin-bottom: 8px; }
   .modal-precio { font-size: 20px; margin: 10px 0; color: #556B2F; font-weight: bold; }
+
+  .modal-carousel { position: relative; width: 100%; overflow: hidden; background: #f4f9f7; touch-action: pan-y; }
+  .carousel-track { display: flex; transition: transform 0.3s ease; }
+  .carousel-track img { width: 100%; flex-shrink: 0; max-height: 320px; object-fit: contain; background: #f4f9f7; }
+  .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.85); border: none; width: 34px; height: 34px; border-radius: 50%; font-size: 18px; color: #556B2F; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .carousel-arrow.left { left: 8px; }
+  .carousel-arrow.right { right: 8px; }
+  .carousel-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
+  .carousel-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.1); }
+  .carousel-dot.activo { background: #556B2F; }
 
   .modal-tabs { display: flex; border-bottom: 1px solid #eee; margin-top: 12px; }
   .modal-tab-btn { flex: 1; background: none; border: none; padding: 10px 4px; font-size: 12px; color: #888; border-bottom: 2px solid transparent; cursor: pointer; }
@@ -237,7 +246,12 @@
 
 <div class="modal" id="modal">
   <div class="modal-content">
-    <img id="modalImg" src="" alt="">
+    <div class="modal-carousel" id="modalCarousel">
+      <div class="carousel-track" id="carouselTrack"></div>
+      <button class="carousel-arrow left" id="carouselPrev" onclick="carouselMove(-1)">‹</button>
+      <button class="carousel-arrow right" id="carouselNext" onclick="carouselMove(1)">›</button>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
     <div class="modal-body">
       <h2 id="modalNombre"></h2>
       <div class="modal-precio" id="modalPrecio"></div>
@@ -274,6 +288,10 @@ let productos = [];
 let categoriaActiva = 'Drinks';
 let productoActual = null;
 let currentLang = localStorage.getItem('kefify_lang') || 'en';
+
+let carouselFotos = [];
+let carouselIndex = 0;
+let touchStartX = 0;
 
 function formatearPrecio(p) {
   if (currentLang === 'es') {
@@ -546,12 +564,41 @@ function construirTablaNutricion(p, t) {
   return html;
 }
 
+function renderCarousel() {
+  const track = document.getElementById('carouselTrack');
+  const dotsCont = document.getElementById('carouselDots');
+  const prevBtn = document.getElementById('carouselPrev');
+  const nextBtn = document.getElementById('carouselNext');
+
+  track.innerHTML = carouselFotos.map(url => `<img src="${url}" alt="">`).join('');
+  track.style.transform = `translateX(-${carouselIndex * 100}%)`;
+
+  dotsCont.innerHTML = carouselFotos.map((_, i) =>
+    `<div class="carousel-dot ${i === carouselIndex ? 'activo' : ''}"></div>`
+  ).join('');
+
+  const mostrarControles = carouselFotos.length > 1;
+  prevBtn.style.display = mostrarControles ? 'flex' : 'none';
+  nextBtn.style.display = mostrarControles ? 'flex' : 'none';
+  dotsCont.style.display = mostrarControles ? 'flex' : 'none';
+}
+
+function carouselMove(dir) {
+  if (carouselFotos.length === 0) return;
+  carouselIndex = (carouselIndex + dir + carouselFotos.length) % carouselFotos.length;
+  renderCarousel();
+}
+
 function abrirModal(index) {
   const t = T[currentLang];
   const numero = NUMEROS[currentLang];
   const p = productos[index];
   productoActual = p;
-  document.getElementById('modalImg').src = p.fotos[0] || '';
+
+  carouselFotos = p.fotos && p.fotos.length ? p.fotos : [''];
+  carouselIndex = 0;
+  renderCarousel();
+
   const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
   const descripcionMostrar = currentLang === 'es' && p.descripcionEs ? p.descripcionEs : p.descripcion;
   const ingredientesMostrar = currentLang === 'es' && p.ingredientesEs ? p.ingredientesEs : p.ingredientes;
@@ -578,6 +625,18 @@ function abrirModal(index) {
 function cerrarModal() {
   document.getElementById('modal').classList.remove('abierto');
 }
+
+document.getElementById('modalCarousel').addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+
+document.getElementById('modalCarousel').addEventListener('touchend', (e) => {
+  const touchEndX = e.changedTouches[0].clientX;
+  const diff = touchStartX - touchEndX;
+  if (Math.abs(diff) > 40) {
+    carouselMove(diff > 0 ? 1 : -1);
+  }
+}, { passive: true });
 
 async function compartirPagina() {
   const t = T[currentLang];
