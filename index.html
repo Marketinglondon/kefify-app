@@ -52,7 +52,13 @@
   .grid.transicionando { animation: fadeSlide 0.35s ease; }
   @keyframes fadeSlide { 0% { opacity: 0; transform: translateX(20px); } 100% { opacity: 1; transform: translateX(0); } }
   .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.08); cursor: pointer; }
-  .card img { width: 100%; height: 140px; object-fit: cover; }
+  .card-carousel { position: relative; width: 100%; height: 140px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .card-carousel::-webkit-scrollbar { display: none; }
+  .card-carousel-track { display: flex; height: 100%; }
+  .card-carousel img { width: 100%; height: 140px; object-fit: cover; flex-shrink: 0; scroll-snap-align: start; }
+  .card-dots { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; gap: 4px; pointer-events: none; }
+  .card-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.1); }
+  .card-dot.activo { background: #556B2F; }
   .card-body { padding: 10px; }
   .card-body h3 { font-size: 14px; margin-bottom: 4px; color: #1a1a1a; }
   .card-body .precio { color: #556B2F; font-weight: bold; font-size: 16px; }
@@ -513,6 +519,33 @@ function filtrar(cat) {
   renderGrid();
 }
 
+function renderCardImagenes(p) {
+  const fotos = p.fotos && p.fotos.length ? p.fotos : [''];
+  if (fotos.length === 1) {
+    return `<div class="card-carousel"><div class="card-carousel-track"><img src="${fotos[0]}" alt="" onerror="this.style.display='none'"></div></div>`;
+  }
+  const imgs = fotos.map(url => `<img src="${url}" alt="" onerror="this.style.display='none'">`).join('');
+  const dots = fotos.map((_, i) => `<div class="card-dot ${i === 0 ? 'activo' : ''}"></div>`).join('');
+  return `
+    <div class="card-carousel" onclick="event.stopPropagation()">
+      <div class="card-carousel-track">${imgs}</div>
+      <div class="card-dots">${dots}</div>
+    </div>
+  `;
+}
+
+function attachCardCarouselListeners() {
+  document.querySelectorAll('.card-carousel').forEach(el => {
+    const track = el.querySelector('.card-carousel-track');
+    const dots = el.querySelectorAll('.card-dot');
+    if (dots.length < 2) return;
+    el.addEventListener('scroll', () => {
+      const idx = Math.round(el.scrollLeft / el.clientWidth);
+      dots.forEach((d, i) => d.classList.toggle('activo', i === idx));
+    });
+  });
+}
+
 function renderGrid() {
   const t = T[currentLang];
   const grid = document.getElementById('grid');
@@ -526,7 +559,7 @@ function renderGrid() {
       const nombreMostrar = currentLang === 'es' && p.nombreEs ? p.nombreEs : p.nombre;
       return `
       <div class="card" onclick="abrirModal(${productos.indexOf(p)})">
-        <img src="${p.fotos[0] || ''}" alt="${nombreMostrar}" onerror="this.style.display='none'">
+        ${renderCardImagenes(p)}
         <div class="card-body">
           <h3>${nombreMostrar}</h3>
           <div class="precio">${precioTxt}</div>
@@ -539,6 +572,8 @@ function renderGrid() {
   grid.classList.remove('transicionando');
   void grid.offsetWidth;
   grid.classList.add('transicionando');
+
+  attachCardCarouselListeners();
 }
 
 function construirTablaNutricion(p, t) {
